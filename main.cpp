@@ -1,6 +1,25 @@
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "Gravity Simulator");
+    window.setFramerateLimit(120);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed) window.close();
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
+        }
+
+        window.clear();
+
+        window.display();
+    }
+
+    return EXIT_SUCCESS;
 }
