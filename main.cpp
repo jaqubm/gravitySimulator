@@ -7,20 +7,24 @@
 class GravitySource
 {
     sf::Vector2f pos;
+    sf::Vector2f relPos;
     float strength;
     sf::CircleShape circleShape;
 
 public:
-    GravitySource(float pos_x, float pos_y, float strength)
+    GravitySource(float pos_x, float pos_y, float strength, float radius)
     {
-        this->pos.x = pos_x - 25;
-        this->pos.y = pos_y - 25;
+        this->pos.x = pos_x;
+        this->pos.y = pos_y;
+
+        this->relPos.x = pos_x - radius;
+        this->relPos.y = pos_y - radius;
 
         this->strength = strength;
 
-        circleShape.setPosition(pos);
+        circleShape.setPosition(relPos);
         circleShape.setFillColor(sf::Color::White);
-        circleShape.setRadius(50);
+        circleShape.setRadius(radius);
     }
 
     void render(sf::RenderWindow& window)
@@ -65,11 +69,6 @@ public:
         window.draw(circleShape);
     }
 
-    sf::Vector2f getPos()
-    {
-        return pos;
-    }
-
     void updatePhysics(GravitySource& gravitySource, float deltaTime)
     {
         float distanceX = gravitySource.getPos().x - pos.x;
@@ -82,10 +81,10 @@ public:
         float normalizedX = inverseDistance * distanceX;
         float normalizedY = inverseDistance * distanceY;
 
-        float inverseSquareDropoff = inverseDistance * inverseDistance;
+        float inverseSquareDropOff = inverseDistance * inverseDistance;
 
-        float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropoff * deltaTime;
-        float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropoff * deltaTime;
+        float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
+        float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
 
         vel.x += accelerationX;
         vel.y += accelerationY;
@@ -105,37 +104,41 @@ int main()
     std::uniform_real_distribution<float> randPosY(0, 1000);
     std::uniform_real_distribution<float> randVel(0, 1);
 
+    //Setting Antialiasing
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
+    //Creating and setting up window
     sf::RenderWindow window(sf::VideoMode(1600, 1000), "Gravity Simulator", sf::Style::Close | sf::Style::Titlebar, settings);
     window.setFramerateLimit(120);
 
-    std::cout << "Window Initialized" << std::endl;
+    //Creating deltaClock
+    sf::Clock deltaClock;
 
-    // Earth - 6e24, Moon - 7.3e22, Sun - 2e30
+    //Gravity strengths examples (not real ones)
+    // Earth - 0x6e24, Sun - 0x7e22, Moon - 0x2e30
 
+    //Creating GravitySources
     std::vector<GravitySource> gravitySources;
-    gravitySources.push_back(GravitySource(800, 500, 0x6e24));
-    //gravitySources.push_back(GravitySource(500, 500, 500000));
-    //gravitySources.push_back(GravitySource(1200, 500, 500000));
+    //gravitySources.emplace_back(800, 500, 0x6e24, 70);
+    //gravitySources.emplace_back(800, 500, 0x7e22, 150);
+    gravitySources.emplace_back(800, 500, 0x2e30, 50);
 
-    int particlesNum = 20;
+    //Creating Particles
+    int particlesNum = 1000;
     std::vector<Particle> particles;
 
     for (int i=0; i<particlesNum; i++)
     {
-        particles.push_back(Particle(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt))));
-        //particles.push_back(Particle(600, 700, 4, (float)(0.2f + (0.1 / particlesNum) * i), sf::Color(dist(mt), dist(mt), dist(mt))));
+        //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(100, 900, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
     }
 
-    sf::Clock deltaClock;
-
+    //Main loop
     while (window.isOpen())
     {
-        sf::Time deltaTime = deltaClock.restart();
-
-        sf::Event event;
+        //Taking care of eventActions
+        sf::Event event{};
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) window.close();
@@ -143,8 +146,13 @@ int main()
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
         }
 
+        //Clearing up window
         window.clear();
 
+        //Calculating deltaTime
+        sf::Time deltaTime = deltaClock.restart();
+
+        //Updating physics
         for (auto & gravitySource : gravitySources)
         {
             for (auto & particle : particles)
@@ -153,19 +161,13 @@ int main()
             }
         }
 
+        //Rendering GravitySources
         for (auto & gravitySource : gravitySources) gravitySource.render(window);
 
-        int count = 0;
+        //Rendering Particles
+        for (auto & particle : particles) particle.render(window);
 
-        for (auto & particle : particles)
-        {
-            particle.render(window);
-
-            if ((particle.getPos().x <= 1600 && particle.getPos().y <= 1000) || (particle.getPos().x >= 0 && particle.getPos().y >= 0)) count++;
-        }
-
-        //std::cout << "Currently visible particles on screen: " << count << std::endl;
-
+        //Displaying window
         window.display();
     }
 
