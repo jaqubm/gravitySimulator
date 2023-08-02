@@ -9,6 +9,7 @@ class GravitySource
     sf::Vector2f pos;
     sf::Vector2f relPos;
     float strength;
+    float radius;
     sf::CircleShape circleShape;
 
 public:
@@ -21,6 +22,8 @@ public:
         this->relPos.y = pos_y - radius;
 
         this->strength = strength;
+
+        this->radius = radius;
 
         circleShape.setPosition(relPos);
         circleShape.setFillColor(sf::Color::White);
@@ -41,16 +44,22 @@ public:
     {
         return strength;
     }
+
+    float getRadius() const
+    {
+        return radius;
+    }
 };
 
 class Particle
 {
     sf::Vector2f pos;
     sf::Vector2f vel;
+    float radius;
     sf::CircleShape circleShape;
 
 public:
-    Particle(float pos_x, float pos_y, float vel_x, float vel_y, sf::Color color)
+    Particle(float pos_x, float pos_y, float vel_x, float vel_y, float radius, sf::Color color)
     {
         this->pos.x = pos_x;
         this->pos.y = pos_y;
@@ -58,9 +67,11 @@ public:
         this->vel.x = vel_x;
         this->vel.y = vel_y;
 
+        this->radius = radius;
+
         circleShape.setPosition(pos);
         circleShape.setFillColor(color);
-        circleShape.setRadius(5);
+        circleShape.setRadius(radius);
     }
 
     void render(sf::RenderWindow& window)
@@ -88,6 +99,11 @@ public:
 
         vel.x += accelerationX;
         vel.y += accelerationY;
+
+        if (distance < radius + gravitySource.getRadius())
+        {
+            std::cout << "Collision" << std::endl;
+        }
 
         pos.x += vel.x;
         pos.y += vel.y;
@@ -120,18 +136,19 @@ int main()
 
     //Creating GravitySources
     std::vector<GravitySource> gravitySources;
-    //gravitySources.emplace_back(800, 500, 0x6e24, 70);
-    //gravitySources.emplace_back(800, 500, 0x7e22, 150);
-    gravitySources.emplace_back(800, 500, 0x2e30, 50);
+    gravitySources.emplace_back(800, 500, 0x7e22, 150);   //Saturn
+    //gravitySources.emplace_back(800, 500, 0x6e24, 70);    //Earth
+    //gravitySources.emplace_back(800, 500, 0x2e30, 30);  //Moon
 
     //Creating Particles
-    int particlesNum = 1000;
+    int particlesNum = 1;
     std::vector<Particle> particles;
 
     for (int i=0; i<particlesNum; i++)
     {
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(100, 900, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(600, 800, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(600, 800, 0, 0, 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
     }
 
     //Main loop
