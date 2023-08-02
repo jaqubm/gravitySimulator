@@ -4,6 +4,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include "config.h"
+
 class GravitySource
 {
     sf::Vector2f pos;
@@ -54,6 +56,7 @@ public:
 class Particle
 {
     sf::Vector2f pos;
+    sf::Vector2f relPos;
     sf::Vector2f vel;
     float radius;
     sf::CircleShape circleShape;
@@ -63,6 +66,9 @@ public:
     {
         this->pos.x = pos_x;
         this->pos.y = pos_y;
+
+        this->relPos.x = pos_x - radius;
+        this->relPos.y = pos_y - radius;
 
         this->vel.x = vel_x;
         this->vel.y = vel_y;
@@ -76,7 +82,7 @@ public:
 
     void render(sf::RenderWindow& window)
     {
-        circleShape.setPosition(pos);
+        circleShape.setPosition(relPos);
         window.draw(circleShape);
     }
 
@@ -107,6 +113,9 @@ public:
 
         pos.x += vel.x;
         pos.y += vel.y;
+
+        relPos.x = pos.x - radius;
+        relPos.y = pos.y - radius;
     }
 };
 
@@ -116,8 +125,8 @@ int main()
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_int_distribution<int> randColor(0, 256);
-    std::uniform_real_distribution<float> randPosX(0, 1600);
-    std::uniform_real_distribution<float> randPosY(0, 1000);
+    std::uniform_real_distribution<float> randPosX(0, W);
+    std::uniform_real_distribution<float> randPosY(0, H);
     std::uniform_real_distribution<float> randVel(0, 1);
 
     //Setting up Antialiasing
@@ -125,8 +134,8 @@ int main()
     settings.antialiasingLevel = 8;
 
     //Creating and setting up window
-    sf::RenderWindow window(sf::VideoMode(1600, 1000), "Gravity Simulator", sf::Style::Close | sf::Style::Titlebar, settings);
-    window.setFramerateLimit(120);
+    sf::RenderWindow window(sf::VideoMode(W, H), "Gravity Simulator", sf::Style::Close | sf::Style::Titlebar, settings);
+    window.setFramerateLimit(FPS);
 
     //Creating deltaClock
     sf::Clock deltaClock;
@@ -136,9 +145,9 @@ int main()
 
     //Creating GravitySources
     std::vector<GravitySource> gravitySources;
-    gravitySources.emplace_back(800, 500, 0x7e22, 150);   //Saturn
-    //gravitySources.emplace_back(800, 500, 0x6e24, 70);    //Earth
-    //gravitySources.emplace_back(800, 500, 0x2e30, 30);  //Moon
+    gravitySources.emplace_back(W * 0.5f, H * 0.5f, 0x7e22, 100);   //Saturn
+    //gravitySources.emplace_back(W / 2, H / 2, 0x6e24, 60);    //Earth
+    //gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
 
     //Creating Particles
     int particlesNum = 1;
@@ -147,8 +156,8 @@ int main()
     for (int i=0; i<particlesNum; i++)
     {
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(600, 800, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(600, 800, 0, 0, 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2 - 300, H / 2 + 300, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2 - 300, H / 2 + 300, 0, 0, 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
     }
 
     //Main loop
