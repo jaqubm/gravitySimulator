@@ -116,7 +116,7 @@ int main()
     sf::Clock deltaClock;
 
     //Gravity strengths examples (not real ones)
-    // Earth - 0x6e24, Sun - 0x7e22, Moon - 0x2e30
+    // Saturn - 0x7e22, Earth - 0x6e24, Moon - 0x2e30
 
     //Creating GravitySources
     std::vector<GravitySource> gravitySources;
