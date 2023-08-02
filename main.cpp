@@ -88,34 +88,56 @@ public:
 
     void updatePhysics(GravitySource& gravitySource, float deltaTime)
     {
+        //Normal Vector
         float distanceX = gravitySource.getPos().x - pos.x;
         float distanceY = gravitySource.getPos().y - pos.y;
 
+        //Distance between GravitySource and Particle
         float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
 
+        //Simplifying division to speed up calculations
         float inverseDistance = 1.f / distance;
 
+        //Unit Vector
         float normalizedX = inverseDistance * distanceX;
         float normalizedY = inverseDistance * distanceY;
 
         float inverseSquareDropOff = inverseDistance * inverseDistance;
 
+        //Calculating Acceleration
         float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
         float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
 
+        //Updating Velocity
         vel.x += accelerationX;
         vel.y += accelerationY;
 
-        if (distance < radius + gravitySource.getRadius())
-        {
-            std::cout << "Collision" << std::endl;
-        }
-
+        //Updating Position
         pos.x += vel.x;
         pos.y += vel.y;
 
+        //Updating Render Position
         relPos.x = pos.x - radius;
         relPos.y = pos.y - radius;
+
+        //TODO: Make collision work properly!!!
+        //Checking for collision
+        if (distance < radius + gravitySource.getRadius())
+        {
+            //Tangent Vector
+            float tangentX = -normalizedY;
+            float tangentY = normalizedX;
+
+            //Velocity scalar in normal direction
+            float normalScalarX = normalizedX * vel.x;
+            float normalScalarY = normalizedY * vel.y;
+
+            normalizedX = normalScalarX * normalizedX;
+            normalizedY = normalScalarY * normalizedY;
+
+            vel.x = normalizedX + tangentX;
+            vel.y = normalizedY + tangentY;
+        }
     }
 };
 
@@ -156,8 +178,8 @@ int main()
     for (int i=0; i<particlesNum; i++)
     {
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2 - 300, H / 2 + 300, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2 - 300, H / 2 + 300, 0, 0, 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2 - 200, H / 2 + 200, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2 - 200, H / 2 + 200, 0, 0, 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
     }
 
     //Main loop
