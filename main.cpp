@@ -104,7 +104,7 @@ int main()
     std::uniform_real_distribution<float> randPosY(0, 1000);
     std::uniform_real_distribution<float> randVel(0, 1);
 
-    //Setting Antialiasing
+    //Setting up Antialiasing
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
