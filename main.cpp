@@ -112,40 +112,16 @@ public:
         vel.x += accelerationX;
         vel.y += accelerationY;
 
-//        //Updating Position
-//        pos.x += vel.x;
-//        pos.y += vel.y;
-//
-//        //Updating Render Position
-//        relPos.x = pos.x - radius;
-//        relPos.y = pos.y - radius;
-
-        //TODO: Make collision work properly!!!
         //Checking for collision
         if (distance <= radius + gravitySource.getRadius())
         {
+            //Projection Vector
             float projectionX = (vel.x * normalizedX + vel.y * normalizedY) * normalizedX;
-            float projectionY = (vel.y * normalizedY + vel.y * normalizedY) * normalizedY;
+            float projectionY = (vel.x * normalizedX + vel.y * normalizedY) * normalizedY;
 
+            //Calculating new Velocity Vector
             vel.x = vel.x - 2 * projectionX;
             vel.y = vel.y - 2 * projectionY;
-
-            /*//Tangent Vector
-            float tangentX = -normalizedY;
-            float tangentY = normalizedX;
-
-            //Velocity scalar in normal direction
-            float normalScalarX = normalizedX * vel.x;
-            float normalScalarY = normalizedY * vel.y;
-
-            //New Unit Vector
-            normalizedX = normalScalarX * normalizedX;
-            normalizedY = normalScalarY * normalizedY;
-
-            std::cout << vel.x << " " << vel.y << std::endl;
-            vel.x = normalizedX + tangentX;
-            vel.y = normalizedY + tangentY;
-            std::cout << vel.x << " " << vel.y << std::endl;*/
         }
 
         //Updating Position
@@ -184,9 +160,9 @@ int main()
 
     //Creating GravitySources
     std::vector<GravitySource> gravitySources;
-    //gravitySources.emplace_back(W * 0.5f, H * 0.5f, 0x7e22, 100);   //Saturn
+    gravitySources.emplace_back(W * 0.5f, H * 0.5f, 0x7e22, 100);   //Saturn
     //gravitySources.emplace_back(W / 2, H / 2, 0x6e24, 60);    //Earth
-    gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
+    //gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
 
     //Creating Particles
     int particlesNum = 1000;
@@ -194,9 +170,9 @@ int main()
 
     for (int i=0; i<particlesNum; i++)
     {
-        //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2 - 100, H / 2 + 100, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2 - 200, H / 2 + 200, 0, (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W / 2 - 300, H / 2 + 300, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
     }
 
     //Main loop
