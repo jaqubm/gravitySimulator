@@ -98,7 +98,7 @@ public:
         //Simplifying division to speed up calculations
         float inverseDistance = 1.f / distance;
 
-        //Unit Vector
+        //Normalized Unit Vector
         float normalizedX = inverseDistance * distanceX;
         float normalizedY = inverseDistance * distanceY;
 
@@ -112,19 +112,25 @@ public:
         vel.x += accelerationX;
         vel.y += accelerationY;
 
-        //Updating Position
-        pos.x += vel.x;
-        pos.y += vel.y;
-
-        //Updating Render Position
-        relPos.x = pos.x - radius;
-        relPos.y = pos.y - radius;
+//        //Updating Position
+//        pos.x += vel.x;
+//        pos.y += vel.y;
+//
+//        //Updating Render Position
+//        relPos.x = pos.x - radius;
+//        relPos.y = pos.y - radius;
 
         //TODO: Make collision work properly!!!
         //Checking for collision
-        if (distance < radius + gravitySource.getRadius())
+        if (distance <= radius + gravitySource.getRadius())
         {
-            //Tangent Vector
+            float projectionX = (vel.x * normalizedX + vel.y * normalizedY) * normalizedX;
+            float projectionY = (vel.y * normalizedY + vel.y * normalizedY) * normalizedY;
+
+            vel.x = vel.x - 2 * projectionX;
+            vel.y = vel.y - 2 * projectionY;
+
+            /*//Tangent Vector
             float tangentX = -normalizedY;
             float tangentY = normalizedX;
 
@@ -132,12 +138,23 @@ public:
             float normalScalarX = normalizedX * vel.x;
             float normalScalarY = normalizedY * vel.y;
 
+            //New Unit Vector
             normalizedX = normalScalarX * normalizedX;
             normalizedY = normalScalarY * normalizedY;
 
+            std::cout << vel.x << " " << vel.y << std::endl;
             vel.x = normalizedX + tangentX;
             vel.y = normalizedY + tangentY;
+            std::cout << vel.x << " " << vel.y << std::endl;*/
         }
+
+        //Updating Position
+        pos.x += vel.x;
+        pos.y += vel.y;
+
+        //Updating Render Position
+        relPos.x = pos.x - radius;
+        relPos.y = pos.y - radius;
     }
 };
 
@@ -167,19 +184,19 @@ int main()
 
     //Creating GravitySources
     std::vector<GravitySource> gravitySources;
-    gravitySources.emplace_back(W * 0.5f, H * 0.5f, 0x7e22, 100);   //Saturn
+    //gravitySources.emplace_back(W * 0.5f, H * 0.5f, 0x7e22, 100);   //Saturn
     //gravitySources.emplace_back(W / 2, H / 2, 0x6e24, 60);    //Earth
-    //gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
+    gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
 
     //Creating Particles
-    int particlesNum = 1;
+    int particlesNum = 1000;
     std::vector<Particle> particles;
 
     for (int i=0; i<particlesNum; i++)
     {
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2 - 200, H / 2 + 200, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2 - 200, H / 2 + 200, 0, 0, 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2 - 100, H / 2 + 100, (float)(0.2f + (0.1 / particlesNum) * i), (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2 - 200, H / 2 + 200, 0, (float)(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
     }
 
     //Main loop

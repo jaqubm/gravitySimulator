@@ -10,7 +10,8 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(gravitySimulator main.cpp
-        config.h)
+        config.h
+)
 
 target_link_libraries(gravitySimulator PRIVATE sfml-graphics)
 target_compile_features(gravitySimulator PRIVATE cxx_std_17)
