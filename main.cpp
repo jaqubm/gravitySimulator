@@ -166,8 +166,8 @@ int main()
     //gravitySources.emplace_back(W / 2, H / 2, 0x6e24, 60);    //Earth
     //gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
 
-    gravitySources.emplace_back(W * 0.33f, H * 0.5f, 0x6e24, 30);   //Saturn
-    gravitySources.emplace_back(W * 0.66f, H * 0.5f, 0x6e24, 30);    //Earth
+    gravitySources.emplace_back(W * 0.33f, H * 0.5f, 3 * 0x6e24, 30);   //Saturn
+    gravitySources.emplace_back(W * 0.66f, H * 0.5f, 3 * 0x6e24, 30);    //Earth
 
     //Creating Particles
     int particlesNum = 30000;
@@ -180,7 +180,7 @@ int main()
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W / 2 - 300, H / 2 + 300, static_cast<float>(0.2f + (0.1 / particlesNum) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2, H / 2 + 100, .3f, static_cast<float>(-1 * (0.7f + (0.1 / particlesNum) * i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2, H / 2 + 100, 3.f, static_cast<float>(0.7f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
