@@ -86,42 +86,37 @@ public:
         window.draw(circleShape);
     }
 
-    void updatePhysics(GravitySource& gravitySource, float deltaTime)
+    void updatePosition(std::vector<GravitySource>& gravitySources)
     {
-        //Normal Vector
-        float distanceX = gravitySource.getPos().x - pos.x;
-        float distanceY = gravitySource.getPos().y - pos.y;
-
-        //Distance between GravitySource and Particle
-        float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
-
-        //Simplifying division to speed up calculations
-        float inverseDistance = 1.f / distance;
-
-        //Normalized Unit Vector
-        float normalizedX = inverseDistance * distanceX;
-        float normalizedY = inverseDistance * distanceY;
-
-        float inverseSquareDropOff = inverseDistance * inverseDistance;
-
-        //Calculating Acceleration
-        float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
-        float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
-
-        //Updating Velocity
-        vel.x += accelerationX;
-        vel.y += accelerationY;
-
-        //Checking for collision
-        if (distance <= radius + gravitySource.getRadius())
+        for (auto &gravitySource : gravitySources)
         {
-            //Projection Vector
-            float projectionX = (vel.x * normalizedX + vel.y * normalizedY) * normalizedX;
-            float projectionY = (vel.x * normalizedX + vel.y * normalizedY) * normalizedY;
+            //Normal Vector
+            float distanceX = gravitySource.getPos().x - pos.x;
+            float distanceY = gravitySource.getPos().y - pos.y;
 
-            //Calculating new Velocity Vector
-            vel.x = vel.x - 2 * projectionX;
-            vel.y = vel.y - 2 * projectionY;
+            //Distance between GravitySource and Particle
+            float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            //Simplifying division to speed up calculations
+            float inverseDistance = 1.f / distance;
+
+            //Normalized Unit Vector
+            float normalizedX = inverseDistance * distanceX;
+            float normalizedY = inverseDistance * distanceY;
+
+            //Checking for collision
+            if (distance <= radius + gravitySource.getRadius())
+            {
+                //Projection Vector
+                float projectionX = (vel.x * normalizedX + vel.y * normalizedY) * normalizedX;
+                float projectionY = (vel.x * normalizedX + vel.y * normalizedY) * normalizedY;
+
+                //Calculating new Velocity Vector
+                vel.x = vel.x - 2 * projectionX;
+                vel.y = vel.y - 2 * projectionY;
+
+                break;
+            }
         }
 
         //Updating Position
@@ -131,6 +126,36 @@ public:
         //Updating Render Position
         relPos.x = pos.x - radius;
         relPos.y = pos.y - radius;
+    }
+
+    void updatePhysics(std::vector<GravitySource>& gravitySources, float deltaTime)
+    {
+        for (auto &gravitySource : gravitySources)
+        {
+            //Normal Vector
+            float distanceX = gravitySource.getPos().x - pos.x;
+            float distanceY = gravitySource.getPos().y - pos.y;
+
+            //Distance between GravitySource and Particle
+            float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            //Simplifying division to speed up calculations
+            float inverseDistance = 1.f / distance;
+
+            //Normalized Unit Vector
+            float normalizedX = inverseDistance * distanceX;
+            float normalizedY = inverseDistance * distanceY;
+
+            float inverseSquareDropOff = inverseDistance * inverseDistance;
+
+            //Calculating Acceleration
+            float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
+            float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
+
+            //Updating Velocity
+            vel.x += accelerationX;
+            vel.y += accelerationY;
+        }
     }
 };
 
@@ -166,8 +191,8 @@ int main()
     //gravitySources.emplace_back(W / 2, H / 2, 0x6e24, 60);    //Earth
     //gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
 
-    gravitySources.emplace_back(W * 0.33f, H * 0.5f, 3 * 0x6e24, 30);   //Saturn
-    gravitySources.emplace_back(W * 0.66f, H * 0.5f, 3 * 0x6e24, 30);    //Earth
+    gravitySources.emplace_back(W * 0.3f, H * 0.5f, 5 * 0x6e24, 30);   //Saturn
+    gravitySources.emplace_back(W * 0.7f, H * 0.5f, 5 * 0x6e24, 30);    //Earth
 
     //Creating Particles
     int particlesNum = 30000;
@@ -178,9 +203,9 @@ int main()
     {
         //Testing examples
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(W / 2 - 300, H / 2 + 300, static_cast<float>(0.2f + (0.1 / particlesNum) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2, H / 2 + 100, 3.f, static_cast<float>(0.7f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W / 2 - 300, H / 2 + 300, static_cast<float>(.2f + (.1f / particlesNum) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, static_cast<float>(.2f + (.1f / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2, H / 2 + 300, 5.f, static_cast<float>(.1f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
@@ -203,12 +228,10 @@ int main()
         sf::Time deltaTime = deltaClock.restart();
 
         //Updating physics
-        for (auto & gravitySource : gravitySources)
+        for (auto & particle : particles)
         {
-            for (auto & particle : particles)
-            {
-                particle.updatePhysics(gravitySource, deltaTime.asSeconds());
-            }
+            particle.updatePhysics(gravitySources, deltaTime.asSeconds());
+            particle.updatePosition(gravitySources);
         }
 
         //Rendering GravitySources
