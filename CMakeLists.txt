@@ -9,14 +9,16 @@ FetchContent_Declare(SFML
         GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(gravitySimulator main.cpp
-        config.h
-        include.h
+include_directories(include)
+
+add_executable(gravitySimulator src/main.cpp
+        include/config.h
+        include/include.h
         include/Object.h
-        include/GravitySource.h
-        src/GravitySource.cpp
-        include/Particle.h
-        src/Particle.cpp
+        src/GravitySource/GravitySource.h
+        src/GravitySource/GravitySource.cpp
+        src/Particle/Particle.h
+        src/Particle/Particle.cpp
 )
 
 target_link_libraries(gravitySimulator PRIVATE sfml-graphics)

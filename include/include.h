@@ -9,6 +9,6 @@
 
 #include "config.h"
 
-#include "include/Object.h"
-#include "include/GravitySource.h"
-#include "include/Particle.h"
+#include "Object.h"
+#include "../src/GravitySource/GravitySource.h"
+#include "../src/Particle/Particle.h"

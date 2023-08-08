@@ -1,4 +1,4 @@
-#include "../include.h"
+#include "include.h"
 
 void Particle::updatePosition(std::vector<GravitySource>& gravitySources)
 {

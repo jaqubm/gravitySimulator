@@ -1,9 +1,11 @@
-#include "include.h"
+#include "../include/include.h"
 
 //TODO: Create more advanced collision detection
 //TODO: Create more advanced collision response
 
 //TODO: Create Scene class to run the simulation
+
+//TODO: Add FPS counter in the corner
 
 int main()
 {
@@ -49,9 +51,9 @@ int main()
     {
         //Testing examples
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(W * .5f - 300, H * .5f + 300, 2, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W * .5f - 300, H * .5f + 200, 2.8f, static_cast<float>(.1f + (.1f / static_cast<float>(particlesNum)) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W * .5f - 300, H * .5f + 300, 2, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W * .5f - 300, H * .5f + 200, 2.8f, static_cast<float>(.1f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
