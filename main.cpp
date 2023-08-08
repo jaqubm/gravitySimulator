@@ -49,9 +49,9 @@ int main()
     {
         //Testing examples
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(W / 2 - 300, H / 2 + 300, static_cast<float>(.2f + (.1f / particlesNum) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, static_cast<float>(.2f + (.1f / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2, H / 2 + 200, 2.8f, static_cast<float>(.1f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        //particles.emplace_back(W * .5f - 300, H * .5f + 300, 2, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W * .5f - 300, H * .5f + 200, 2.8f, static_cast<float>(.1f + (.1f / static_cast<float>(particlesNum)) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
