@@ -88,6 +88,7 @@ public:
 
     void updatePosition(std::vector<GravitySource>& gravitySources)
     {
+        //Collision with gravitySources
         for (auto &gravitySource : gravitySources)
         {
             //Normal Vector
@@ -97,16 +98,16 @@ public:
             //Distance between GravitySource and Particle
             float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
 
-            //Simplifying division to speed up calculations
-            float inverseDistance = 1.f / distance;
-
-            //Normalized Unit Vector
-            float normalizedX = inverseDistance * distanceX;
-            float normalizedY = inverseDistance * distanceY;
-
             //Checking for collision
             if (distance <= radius + gravitySource.getRadius())
             {
+                //Simplifying division to speed up calculations
+                float inverseDistance = 1.f / distance;
+
+                //Normalized Unit Vector
+                float normalizedX = inverseDistance * distanceX;
+                float normalizedY = inverseDistance * distanceY;
+
                 //Projection Vector
                 float projectionX = (vel.x * normalizedX + vel.y * normalizedY) * normalizedX;
                 float projectionY = (vel.x * normalizedX + vel.y * normalizedY) * normalizedY;
@@ -114,8 +115,6 @@ public:
                 //Calculating new Velocity Vector
                 vel.x = vel.x - 2 * projectionX;
                 vel.y = vel.y - 2 * projectionY;
-
-                break;
             }
         }
 
@@ -205,7 +204,7 @@ int main()
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W / 2 - 300, H / 2 + 300, static_cast<float>(.2f + (.1f / particlesNum) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, static_cast<float>(.2f + (.1f / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2, H / 2 + 300, 5.f, static_cast<float>(.1f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2, H / 2 + 300, 4.2f, static_cast<float>(.1f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
