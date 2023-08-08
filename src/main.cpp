@@ -49,12 +49,12 @@ int main()
     std::vector<GravitySource> gravitySources;
 
     //Testing examples
-    //gravitySources.emplace_back(W * 0.5f, H * 0.5f, 0x7e22, 100);   //Saturn
-    //gravitySources.emplace_back(W / 2, H / 2, 0x6e24, 60);    //Earth
-    //gravitySources.emplace_back(W / 2, H / 2, 0x2e30, 10);  //Moon
+    //gravitySources.emplace_back(W * .5f, H * .5f, 0x7e22, 100);   //Saturn
+    //gravitySources.emplace_back(W * .5f, H * .5f, 0x6e24, 60);    //Earth
+    //gravitySources.emplace_back(W * .5f, H * .5f, 0x2e30, 10);  //Moon
 
-    gravitySources.emplace_back(W * 0.5f - 300, H * 0.5f, 5 * 0x6e24, 30);   //Saturn
-    gravitySources.emplace_back(W * 0.5f + 300, H * 0.5f, 5 * 0x6e24, 30);    //Earth
+    gravitySources.emplace_back(W * .5f - 300, H * .5f, 5 * 0x6e24, 30);   //Saturn
+    gravitySources.emplace_back(W * .5f + 300, H * .5f, 5 * 0x6e24, 30);    //Earth
 
     //Creating Particles
     int particlesNum = 1000;
