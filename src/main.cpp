@@ -5,8 +5,6 @@
 
 //TODO: Create Scene class to run the simulation
 
-//TODO: Add FPS counter in the corner
-
 int main()
 {
     //Using new random implemented in C++11
@@ -27,6 +25,22 @@ int main()
 
     //Creating deltaClock
     sf::Clock deltaClock;
+
+    //Creating fpsCounter
+    int fpsCounter = 0;
+
+    //Loading up font
+    sf::Font font;
+    font.loadFromFile("res/arial.ttf");
+
+    //Creating fpsText
+    sf::Text fpsText;
+    fpsText.setFont(font);
+    fpsText.setStyle(sf::Text::Bold);
+    fpsText.setPosition(10, 10);
+    fpsText.setCharacterSize(16);
+    fpsText.setFillColor(sf::Color::White);
+    fpsText.setString("FPS: " + std::to_string(fpsCounter));
 
     //Gravity strengths examples (not real ones)
     // Saturn - 0x7e22, Earth - 0x6e24, Moon - 0x2e30
@@ -75,12 +89,19 @@ int main()
         //Calculating deltaTime
         sf::Time deltaTime = deltaClock.restart();
 
+        //Calculating current fps
+        fpsCounter = static_cast<int>(1.f / deltaTime.asSeconds());
+
         //Updating physics
         for (auto & particle : particles)
         {
             particle.updatePhysics(gravitySources, deltaTime.asSeconds());
             particle.updatePosition(gravitySources);
         }
+
+        //Rendering fpsText
+        fpsText.setString("FPS: " + std::to_string(fpsCounter));
+        window.draw(fpsText);
 
         //Rendering GravitySources
         for (auto & gravitySource : gravitySources) gravitySource.render(window);

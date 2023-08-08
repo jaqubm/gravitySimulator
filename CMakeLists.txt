@@ -25,7 +25,12 @@ target_link_libraries(gravitySimulator PRIVATE sfml-graphics)
 target_compile_features(gravitySimulator PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET gravitySimulator POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:gravitySimulator> $<TARGET_FILE_DIR:gravitySimulator> COMMAND_EXPAND_LISTS)
+            COMMAND ${CMAKE_COMMAND} -E copy
+            $<TARGET_RUNTIME_DLLS:gravitySimulator> $<TARGET_FILE_DIR:gravitySimulator> COMMAND_EXPAND_LISTS)
 endif()
+
+add_custom_command(TARGET gravitySimulator POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:gravitySimulator>/res COMMAND_EXPAND_LISTS)
 
 install(TARGETS gravitySimulator)
