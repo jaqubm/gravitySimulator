@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int W = 1280;
-constexpr int H = 720;
+constexpr int W = 1600;
+constexpr int H = 900;
 
-#define FPS 60
+#define FPS 120
