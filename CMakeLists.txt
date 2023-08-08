@@ -11,6 +11,12 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(gravitySimulator main.cpp
         config.h
+        include/Object.h
+        include/GravitySource.h
+        src/GravitySource.cpp
+        include/Particle.h
+        src/Particle.cpp
+        include.h
 )
 
 target_link_libraries(gravitySimulator PRIVATE sfml-graphics)
