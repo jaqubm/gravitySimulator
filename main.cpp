@@ -6,13 +6,25 @@
 
 #include "config.h"
 
-class GravitySource
+class Object
 {
+protected:
     sf::Vector2f pos;
     sf::Vector2f relPos;
+    float radius{};
+    sf::CircleShape circleShape;
+
+public:
+    void render(sf::RenderWindow& window) const
+    {
+        window.draw(circleShape);
+    }
+};
+
+class GravitySource : public Object
+{
     float strength;
     float radius;
-    sf::CircleShape circleShape;
 
 public:
     GravitySource(float pos_x, float pos_y, float strength, float radius)
@@ -32,11 +44,6 @@ public:
         circleShape.setRadius(radius);
     }
 
-    void render(sf::RenderWindow& window)
-    {
-        window.draw(circleShape);
-    }
-
     sf::Vector2f getPos()
     {
         return pos;
@@ -53,13 +60,9 @@ public:
     }
 };
 
-class Particle
+class Particle : public Object
 {
-    sf::Vector2f pos;
-    sf::Vector2f relPos;
     sf::Vector2f vel;
-    float radius;
-    sf::CircleShape circleShape;
 
 public:
     Particle(float pos_x, float pos_y, float vel_x, float vel_y, float radius, sf::Color color)
@@ -78,12 +81,6 @@ public:
         circleShape.setPosition(pos);
         circleShape.setFillColor(color);
         circleShape.setRadius(radius);
-    }
-
-    void render(sf::RenderWindow& window)
-    {
-        circleShape.setPosition(relPos);
-        window.draw(circleShape);
     }
 
     void updatePosition(std::vector<GravitySource>& gravitySources)
@@ -125,6 +122,8 @@ public:
         //Updating Render Position
         relPos.x = pos.x - radius;
         relPos.y = pos.y - radius;
+
+        circleShape.setPosition(relPos);
     }
 
     void updatePhysics(std::vector<GravitySource>& gravitySources, float deltaTime)
@@ -204,7 +203,7 @@ int main()
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W / 2 - 300, H / 2 + 300, static_cast<float>(.2f + (.1f / particlesNum) * i), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W / 2 - 300, H / 2 + 300, 2, static_cast<float>(.2f + (.1f / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W / 2, H / 2 + 200, 3.f, static_cast<float>(.1f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W / 2, H / 2 + 200, 2.8f, static_cast<float>(.1f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
