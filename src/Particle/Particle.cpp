@@ -64,11 +64,11 @@ void Particle::updatePhysics(std::vector<GravitySource>& gravitySources, float d
         float inverseSquareDropOff = inverseDistance * inverseDistance;
 
         //Calculating Acceleration
-        float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
-        float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff * deltaTime;
+        float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff;
+        float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff;
 
         //Updating Velocity
-        vel.x += accelerationX;
-        vel.y += accelerationY;
+        vel.x += accelerationX * deltaTime;
+        vel.y += accelerationY * deltaTime;
     }
 }
