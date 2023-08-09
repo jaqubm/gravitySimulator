@@ -26,6 +26,10 @@ int main()
     //Creating deltaClock
     sf::Clock deltaClock;
 
+    //Creating Background
+    sf::RectangleShape background(sf::Vector2f(W, H));
+    background.setFillColor(sf::Color(20, 25, 30));
+
     //Creating fpsCounter
     int fpsCounter = 0;
 
@@ -98,6 +102,9 @@ int main()
             particle.updatePhysics(gravitySources, deltaTime.asSeconds());
             particle.updatePosition(gravitySources);
         }
+
+        //Rendering Background
+        window.draw(background);
 
         //Rendering fpsText
         fpsText.setString("FPS: " + std::to_string(fpsCounter));
