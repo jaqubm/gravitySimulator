@@ -5,6 +5,8 @@
 
 //TODO: Create Scene class to run the simulation
 
+//TODO: Create more advanced positionUpdate to make it more accurate and FPS independent
+
 int main()
 {
     //Using new random implemented in C++11
