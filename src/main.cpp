@@ -5,8 +5,6 @@
 
 //TODO: Create Scene class to run the simulation
 
-//TODO: Find better solution to make simulation FPS independent
-
 int main()
 {
     //Using new random implemented in C++11
@@ -59,7 +57,7 @@ int main()
     gravitySources.emplace_back(W * .5f + 300, H * .5f, 5 * 0x6e24, 30);    //Earth
 
     //Creating Particles
-    int particlesNum = 1;
+    int particlesNum = 1000;
     std::vector<Particle> particles;
     particles.reserve(particlesNum);
 
