@@ -33,8 +33,8 @@ void Particle::updatePosition(std::vector<GravitySource>& gravitySources)
     }
 
     //Updating Position
-    pos.x += vel.x;
-    pos.y += vel.y;
+    pos.x += vel.x * FPSMultiplication;
+    pos.y += vel.y * FPSMultiplication;
 
     //Updating Render Position
     relPos.x = pos.x - radius;
