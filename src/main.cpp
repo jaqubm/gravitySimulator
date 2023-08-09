@@ -23,7 +23,7 @@ int main()
 
     //Creating and setting up window
     sf::RenderWindow window(sf::VideoMode(W, H), "Gravity Simulator", sf::Style::Close | sf::Style::Titlebar, settings);
-    window.setFramerateLimit(FPS);
+    window.setFramerateLimit(static_cast<int>(FPS));
 
     //Creating deltaClock
     sf::Clock deltaClock;
