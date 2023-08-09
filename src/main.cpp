@@ -31,20 +31,22 @@ int main()
     background.setFillColor(sf::Color(20, 25, 30));
 
     //Creating fpsCounter
-    int fpsCounter = 0;
+    int fpsCounter;
+
+    //Creating framesCounter
+    long long framesCounter = 0;
 
     //Loading up font
     sf::Font font;
     font.loadFromFile("res/arial.ttf");
 
-    //Creating fpsText
-    sf::Text fpsText;
-    fpsText.setFont(font);
-    fpsText.setStyle(sf::Text::Bold);
-    fpsText.setPosition(10, 10);
-    fpsText.setCharacterSize(16);
-    fpsText.setFillColor(sf::Color::White);
-    fpsText.setString("FPS: " + std::to_string(fpsCounter));
+    //Creating and setting up simulationInfo
+    sf::Text simulationInfo;
+    simulationInfo.setFont(font);
+    simulationInfo.setStyle(sf::Text::Bold);
+    simulationInfo.setPosition(10, 10);
+    simulationInfo.setCharacterSize(16);
+    simulationInfo.setFillColor(sf::Color::White);
 
     //Gravity strengths examples (not real ones)
     // Saturn - 0x7e22, Earth - 0x6e24, Moon - 0x2e30
@@ -90,6 +92,8 @@ int main()
         //Clearing up window
         window.clear();
 
+        framesCounter++;
+
         //Calculating deltaTime
         sf::Time deltaTime = deltaClock.restart();
 
@@ -106,15 +110,15 @@ int main()
         //Rendering Background
         window.draw(background);
 
-        //Rendering fpsText
-        fpsText.setString("FPS: " + std::to_string(fpsCounter));
-        window.draw(fpsText);
-
         //Rendering GravitySources
         for (auto & gravitySource : gravitySources) gravitySource.render(window);
 
         //Rendering Particles
         for (auto & particle : particles) particle.render(window);
+
+        //Rendering simulationInfo
+        simulationInfo.setString("FPS: " + std::to_string(fpsCounter) + "\nFrame: " + std::to_string(framesCounter));
+        window.draw(simulationInfo);
 
         //Displaying window
         window.display();
