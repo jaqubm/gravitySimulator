@@ -1,6 +1,6 @@
 #include "include.h"
 
-void Particle::updatePosition(std::vector<GravitySource>& gravitySources)
+void Particle::updatePosition(std::vector<GravitySource>& gravitySources, float deltaTime)
 {
     //Collision with gravitySources
     for (auto &gravitySource : gravitySources)
@@ -32,9 +32,9 @@ void Particle::updatePosition(std::vector<GravitySource>& gravitySources)
         }
     }
 
-    //Updating Position
-    pos.x += vel.x * FPSMultiplication;
-    pos.y += vel.y * FPSMultiplication;
+    //Updating Position with deltaTime as milliSeconds
+    pos.x += vel.x * deltaTime * 1000;
+    pos.y += vel.y * deltaTime * 1000;
 
     //Updating Render Position
     relPos.x = pos.x - radius;
@@ -67,7 +67,7 @@ void Particle::updatePhysics(std::vector<GravitySource>& gravitySources, float d
         float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff;
         float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff;
 
-        //Updating Velocity
+        //Updating Velocity with deltaTime as Seconds
         vel.x += accelerationX * deltaTime;
         vel.y += accelerationY * deltaTime;
     }

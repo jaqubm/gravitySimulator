@@ -5,8 +5,6 @@
 
 //TODO: Create Scene class to run the simulation
 
-//TODO: Create more advanced positionUpdate to make it more accurate and FPS independent
-
 int main()
 {
     //Using new random implemented in C++11
@@ -23,7 +21,7 @@ int main()
 
     //Creating and setting up window
     sf::RenderWindow window(sf::VideoMode(W, H), "Gravity Simulator", sf::Style::Close | sf::Style::Titlebar, settings);
-    window.setFramerateLimit(static_cast<int>(FPS));
+    window.setFramerateLimit(FPS);
 
     //Creating deltaClock
     sf::Clock deltaClock;
@@ -61,8 +59,11 @@ int main()
     //gravitySources.emplace_back(W * .5f, H * .5f, 0x6e24, 60);    //Earth
     //gravitySources.emplace_back(W * .5f, H * .5f, 0x2e30, 10);  //Moon
 
-    gravitySources.emplace_back(W * .5f - 300, H * .5f, 5 * 0x6e24, 30);   //Saturn
-    gravitySources.emplace_back(W * .5f + 300, H * .5f, 5 * 0x6e24, 30);    //Earth
+    gravitySources.emplace_back(W * .5f - 300, H * .5f,  16000, 30);   //Saturn
+    gravitySources.emplace_back(W * .5f + 300, H * .5f, 16000, 30);    //Earth
+
+//    gravitySources.emplace_back(W * .5f - 300, H * .5f, 5 * 0x6e24, 30);   //Saturn
+//    gravitySources.emplace_back(W * .5f + 300, H * .5f, 5 * 0x6e24, 30);    //Earth
 
     //Creating Particles
     int particlesNum = 1000;
@@ -75,7 +76,7 @@ int main()
         //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
         //particles.emplace_back(W * .5f - 300, H * .5f + 300, 2, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-        particles.emplace_back(W * .5f - 300, H * .5f + 200, 2.8f, static_cast<float>(.1f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
+        particles.emplace_back(W * .5f - 300, H * .5f + 200, .3f, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
 
     }
 
@@ -94,6 +95,7 @@ int main()
         //Clearing up window
         window.clear();
 
+        //Updating framesCounter
         framesCounter++;
 
         //Calculating deltaTime
@@ -106,7 +108,7 @@ int main()
         for (auto & particle : particles)
         {
             particle.updatePhysics(gravitySources, deltaTime.asSeconds());
-            particle.updatePosition(gravitySources);
+            particle.updatePosition(gravitySources, deltaTime.asSeconds());
         }
 
         //Rendering Background

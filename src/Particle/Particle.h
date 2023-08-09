@@ -25,7 +25,7 @@ public:
         circleShape.setRadius(radius);
     }
 
-    void updatePosition(std::vector<GravitySource>& gravitySources);
+    void updatePosition(std::vector<GravitySource>& gravitySources, float deltaTime);
 
     void updatePhysics(std::vector<GravitySource>& gravitySources, float deltaTime);
 };
