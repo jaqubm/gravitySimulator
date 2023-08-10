@@ -3,8 +3,10 @@
 Scene::Scene()
 {
     //Using new random implemented in C++11
-    std::random_device rd;
     mt = new std::mt19937(rd());
+    randVel = std::uniform_real_distribution<float>(MIN_VEL, MAX_VEL);
+    randPosX = std::uniform_real_distribution<float>(MIN_POS, MAX_POS);
+    randPosY = std::uniform_real_distribution<float>(MIN_POS, MAX_POS);
 
     //Setting up Antialiasing
     settings = new sf::ContextSettings();
@@ -38,7 +40,11 @@ Scene::Scene()
     ">> TEST_SCENE\n"
     "   SCENE_0\n"
     "   SCENE_1\n"
+    "   SCENE_2\n"
     );
+
+    //Reserving memory for particles
+    particles.reserve(PARTICLES_NUM);
 
     sceneChooser = SceneChooser::TEST_SCENE;
     sceneState = SceneState::SIM_CHOOSE;
@@ -125,12 +131,13 @@ void Scene::eventAction()
             {
                 case SceneChooser::TEST_SCENE:
                 {
-                    sceneChooser = SceneChooser::SCENE_1;
+                    sceneChooser = SceneChooser::SCENE_2;
                     simulationText->setString(
                             "jaqubm/gravity-simulator> Choose scene:\n\n"
                             "   TEST_SCENE\n"
                             "   SCENE_0\n"
-                            ">> SCENE_1\n"
+                            "   SCENE_1\n"
+                            ">> SCENE_2\n"
                     );
                     break;
                 }
@@ -142,6 +149,7 @@ void Scene::eventAction()
                             ">> TEST_SCENE\n"
                             "   SCENE_0\n"
                             "   SCENE_1\n"
+                            "   SCENE_2\n"
                     );
                     break;
                 }
@@ -153,6 +161,19 @@ void Scene::eventAction()
                             "   TEST_SCENE\n"
                             ">> SCENE_0\n"
                             "   SCENE_1\n"
+                            "   SCENE_2\n"
+                    );
+                    break;
+                }
+                case SceneChooser::SCENE_2:
+                {
+                    sceneChooser = SceneChooser::SCENE_1;
+                    simulationText->setString(
+                            "jaqubm/gravity-simulator> Choose scene:\n\n"
+                            "   TEST_SCENE\n"
+                            "   SCENE_0\n"
+                            ">> SCENE_1\n"
+                            "   SCENE_2\n"
                     );
                     break;
                 }
@@ -174,6 +195,7 @@ void Scene::eventAction()
                             "   TEST_SCENE\n"
                             ">> SCENE_0\n"
                             "   SCENE_1\n"
+                            "   SCENE_2\n"
                     );
                     break;
                 }
@@ -184,16 +206,29 @@ void Scene::eventAction()
                             "   TEST_SCENE\n"
                             "   SCENE_0\n"
                             ">> SCENE_1\n"
+                            "   SCENE_2\n"
                     );
                     break;
                 }
                 case SceneChooser::SCENE_1: {
+                    sceneChooser = SceneChooser::SCENE_2;
+                    simulationText->setString(
+                            "jaqubm/gravity-simulator> Choose scene:\n\n"
+                            "   TEST_SCENE\n"
+                            "   SCENE_0\n"
+                            "   SCENE_1\n"
+                            ">> SCENE_2\n"
+                    );
+                    break;
+                }
+                case SceneChooser::SCENE_2: {
                     sceneChooser = SceneChooser::TEST_SCENE;
                     simulationText->setString(
                             "jaqubm/gravity-simulator> Choose scene:\n\n"
                             ">> TEST_SCENE\n"
                             "   SCENE_0\n"
                             "   SCENE_1\n"
+                            "   SCENE_2\n"
                     );
                     break;
                 }
@@ -209,45 +244,45 @@ void Scene::eventAction()
 void Scene::sceneInit() {
     switch (sceneChooser)
     {
-        case SceneChooser::TEST_SCENE:
+        case SceneChooser::TEST_SCENE:  //Randomized particles
         {
             std::cout << "SceneChooser::TEST_SCENE" << std::endl;
 
-            //Testing examples
-            //gravitySources.emplace_back(W * .5f, H * .5f, 0x7e22, 100);   //Saturn
-            //gravitySources.emplace_back(W * .5f, H * .5f, 0x6e24, 60);    //Earth
-            //gravitySources.emplace_back(W * .5f, H * .5f, 0x2e30, 10);  //Moon
+            gravitySources.emplace_back(W * .5f, H * .5f, 0x7e22, 100);
 
-            gravitySources.emplace_back(W * .5f - 300, H * .5f,  16000, 30);   //Saturn
-            gravitySources.emplace_back(W * .5f + 300, H * .5f, 16000, 30);    //Earth
-
-            //    gravitySources.emplace_back(W * .5f - 300, H * .5f, 5 * 0x6e24, 30);   //Saturn
-            //    gravitySources.emplace_back(W * .5f + 300, H * .5f, 5 * 0x6e24, 30);    //Earth
-
-            //Creating Particles
-            particles.reserve(PARTICLE_NUM);
-
-            for (int i=0; i<PARTICLE_NUM; i++)
-            {
-                //Testing examples
-                //particles.emplace_back(randPosX(mt), randPosY(mt), randVel(mt), randVel(mt), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-                //particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / particlesNum) * i), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-                //particles.emplace_back(W * .5f - 300, H * .5f + 300, 2, static_cast<float>(.2f + (.1f / static_cast<float>(particlesNum)) * static_cast<float>(i)), 5, sf::Color(randColor(mt), randColor(mt), randColor(mt)));
-                particles.emplace_back(W * .5f - 300, H * .5f + 200, .3f, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLE_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
-
-            }
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*mt), randPosY(*mt), randVel(*mt), randVel(*mt), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
 
             break;
         }
-        case SceneChooser::SCENE_0:
+        case SceneChooser::SCENE_0: //Particles orbiting gravitySource
         {
             std::cout << "SceneChooser::SCENE_0" << std::endl;
 
+            gravitySources.emplace_back(W * .5f, H * .5f, 36000, 150);
+
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / PARTICLES_NUM) * i), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+
             break;
         }
-        case SceneChooser::SCENE_1:
+        case SceneChooser::SCENE_1: //Particles orbiting gravitySources
         {
             std::cout << "SceneChooser::SCENE_1" << std::endl;
+
+            gravitySources.emplace_back(W * .5f - 300, H * .5f,  16000, 30);
+            gravitySources.emplace_back(W * .5f + 300, H * .5f, 16000, 30);
+
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 300, H * .5f + 200, .3f, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+
+            break;
+        }
+        case SceneChooser::SCENE_2: //Particles creating fun shapes and interactions
+        {
+            std::cout << "SceneChooser::SCENE_2" << std::endl;
+
+            gravitySources.emplace_back(W * .5f - 500, H * .5f,  36000, 90);
+            gravitySources.emplace_back(W * .5f + 500, H * .5f, 36000, 90);
+
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f + 250, .2f, static_cast<float>(.3f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
 
             break;
         }
@@ -257,6 +292,9 @@ void Scene::sceneInit() {
             exit(EXIT_FAILURE);
         }
     }
+
+    simulationText->setCharacterSize(12);
+    simulationText->setFillColor(sf::Color::White);
 }
 
 void Scene::sceneChooserRender()

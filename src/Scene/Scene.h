@@ -5,7 +5,8 @@
 enum class SceneChooser {
     TEST_SCENE,
     SCENE_0,
-    SCENE_1
+    SCENE_1,
+    SCENE_2
 };
 
 enum class SceneState {
@@ -32,6 +33,7 @@ class Scene {
     long long framesCounter = 0;
 
     std::mt19937 * mt;
+    std::random_device rd;
     std::uniform_int_distribution<int> randColor;
     std::uniform_real_distribution<float> randVel;
     std::uniform_real_distribution<float> randPosX;
