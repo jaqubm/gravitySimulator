@@ -4,7 +4,6 @@
 //TODO: Create more advanced collision response
 
 //TODO: Add Functions to implement different Scenes
-//TODO: Add ability to choose scene at start
 
 int main()
 {
