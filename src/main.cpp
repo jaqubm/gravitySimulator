@@ -8,9 +8,9 @@
 
 int main()
 {
-    Scene scene(SceneChooser::TEST_SCENE_0);
+    Scene scene;
 
-    scene.mainLoop();
+    scene.run();
 
     return EXIT_SUCCESS;
 }
