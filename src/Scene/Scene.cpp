@@ -248,7 +248,7 @@ void Scene::sceneInit() {
         {
             std::cout << "SceneChooser::TEST_SCENE" << std::endl;
 
-            gravitySources.emplace_back(W * .5f, H * .5f, 0x7e22, 100);
+            gravitySources.emplace_back(W * .5f, H * .5f, 144000, 100);
 
             for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*mt), randPosY(*mt), randVel(*mt), randVel(*mt), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
 
