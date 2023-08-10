@@ -12,3 +12,5 @@
 #include "Object.h"
 #include "../src/GravitySource/GravitySource.h"
 #include "../src/Particle/Particle.h"
+
+#include "../src/Scene/Scene.h"
