@@ -228,8 +228,6 @@ void Scene::sceneInit() {
     {
         case SceneChooser::TEST_SCENE:  //Randomized particles
         {
-            std::cout << "SceneChooser::TEST_SCENE" << std::endl;
-
             gravitySources.emplace_back(W * .5f, H * .5f, 144000, 70);
 
             for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*mt), randPosY(*mt), randVel(*mt), randVel(*mt), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
@@ -238,8 +236,6 @@ void Scene::sceneInit() {
         }
         case SceneChooser::SCENE_0: //Particles orbiting gravitySource
         {
-            std::cout << "SceneChooser::SCENE_0" << std::endl;
-
             gravitySources.emplace_back(W * .5f, H * .5f, 36000, 90);
 
             for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 200, H * .5f + 200, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / PARTICLES_NUM) * i), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
@@ -248,8 +244,6 @@ void Scene::sceneInit() {
         }
         case SceneChooser::SCENE_1: //Particles orbiting gravitySources
         {
-            std::cout << "SceneChooser::SCENE_1" << std::endl;
-
             gravitySources.emplace_back(W * .5f - 300, H * .5f,  16000, 30);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 16000, 30);
 
@@ -259,8 +253,6 @@ void Scene::sceneInit() {
         }
         case SceneChooser::SCENE_2: //Particles creating fun shapes and interactions
         {
-            std::cout << "SceneChooser::SCENE_2" << std::endl;
-
             gravitySources.emplace_back(W * .5f - 300, H * .5f,  36000, 60);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 36000, 60);
 
