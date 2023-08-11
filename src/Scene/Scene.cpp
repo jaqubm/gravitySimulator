@@ -232,7 +232,7 @@ void Scene::sceneInit() {
     {
         case SceneChooser::TEST_SCENE:  //Randomized particles
         {
-            window->setTitle("gravitySimulator by jaqubm - TEST_SCENE");
+            window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
 
             gravitySources.emplace_back(W * .5f, H * .5f, 144000, 70);
 
@@ -242,7 +242,7 @@ void Scene::sceneInit() {
         }
         case SceneChooser::SCENE_0: //Particles orbiting gravitySource
         {
-            window->setTitle("gravitySimulator by jaqubm - SCENE_0");
+            window->setTitle("gravitySimulator by jaqubm (SCENE_0)");
 
             gravitySources.emplace_back(W * .5f, H * .5f, 36000, 90);
 
@@ -252,7 +252,7 @@ void Scene::sceneInit() {
         }
         case SceneChooser::SCENE_1: //Particles orbiting gravitySources
         {
-            window->setTitle("gravitySimulator by jaqubm - SCENE_1");
+            window->setTitle("gravitySimulator by jaqubm (SCENE_1)");
 
             gravitySources.emplace_back(W * .5f - 300, H * .5f,  16000, 30);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 16000, 30);
@@ -263,7 +263,7 @@ void Scene::sceneInit() {
         }
         case SceneChooser::SCENE_2: //Particles creating fun shapes and interactions
         {
-            window->setTitle("gravitySimulator by jaqubm - SCENE_2");
+            window->setTitle("gravitySimulator by jaqubm (SCENE_2)");
 
             gravitySources.emplace_back(W * .5f - 300, H * .5f,  36000, 60);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 36000, 60);
