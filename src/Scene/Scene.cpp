@@ -13,7 +13,7 @@ Scene::Scene()
     settings->antialiasingLevel = 8;
 
     //Creating and setting up window
-    window = new sf::RenderWindow(sf::VideoMode(W, H), "Gravity Simulator", sf::Style::Close | sf::Style::Titlebar, *settings);
+    window = new sf::RenderWindow(sf::VideoMode(W, H), "gravitySimulator by jaqubm", sf::Style::Close | sf::Style::Titlebar, *settings);
     window->setFramerateLimit(FPS);
 
     //Creating Background
@@ -37,15 +37,22 @@ Scene::Scene()
     simulationText->setFillColor(sf::Color::Green);
 
     simulationText->setString(
-    "jaqubm/gravity-simulator> Choose scene:\n\n"
-    ">> TEST_SCENE\n"
-    "   SCENE_0\n"
-    "   SCENE_1\n"
-    "   SCENE_2\n"
+            "jaqubm/gravity-simulator> Choose scene:\n\n"
+            ">> TEST_SCENE\n"
+            "   SCENE_0\n"
+            "   SCENE_1\n"
+            "   SCENE_2\n"
     );
 
-    //Reserving memory for particles
-    particles.reserve(PARTICLES_NUM);
+    //Creating and setting up simulationControls
+    simulationControls = new sf::Text();
+    simulationControls->setFont(*font);
+    simulationControls->setStyle(sf::Text::Bold);
+    simulationControls->setPosition(10, H - 30);
+    simulationControls->setCharacterSize(10);
+    simulationControls->setFillColor(sf::Color::White);
+
+    simulationControls->setString("Arrows (UP/DOWN) / Enter - Choose Scene\nESC - Close gravitySimulator");
 
     sceneChooser = SceneChooser::TEST_SCENE;
     sceneState = SceneState::SIM_CHOOSE;
@@ -54,7 +61,13 @@ Scene::Scene()
 Scene::~Scene()
 {
     delete window;
+    delete settings;
     delete background;
+    delete deltaClock;
+    delete deltaTime;
+    delete font;
+    delete simulationText;
+    delete simulationControls;
     delete mt;
 }
 
@@ -66,6 +79,9 @@ void Scene::run()
 
         window->clear();
 
+        *deltaTime = deltaClock->restart();
+        fpsCounter = static_cast<int>(1.f / deltaTime->asSeconds());
+
         switch (sceneState)
         {
             case SceneState::SIM_CHOOSE:
@@ -76,6 +92,11 @@ void Scene::run()
             case SceneState::SIM:
             {
                 update();
+                simulationRender();
+                break;
+            }
+            case SceneState::SIM_PAUSE:
+            {
                 simulationRender();
                 break;
             }
@@ -92,13 +113,6 @@ void Scene::run()
 
 void Scene::update()
 {
-    //Calculating deltaTime
-    *deltaTime = deltaClock->restart();
-
-    //Calculating current fps
-    fpsCounter = static_cast<int>(1.f / deltaTime->asSeconds());
-
-    //Updating physics
     for (auto & particle : particles)
     {
         particle.updatePhysics(gravitySources, deltaTime->asSeconds());
@@ -115,11 +129,32 @@ void Scene::eventAction()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window->close();
 
-        if (sceneState == SceneState::SIM_CHOOSE && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+        if (sceneState == SceneState::SIM && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+        {
+            sceneState = SceneState::SIM_PAUSE;
+            return;
+        }
+
+        if (sceneState == SceneState::SIM_PAUSE && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+        {
+            sceneState = SceneState::SIM;
+            return;
+        }
+
+        if ((sceneState == SceneState::SIM || sceneState == SceneState::SIM_PAUSE) && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+        {
+            simulationText->setCharacterSize(20);
+            simulationText->setFillColor(sf::Color::Green);
+            simulationControls->setPosition(10, H - 30);
+            simulationControls->setString("Arrows (UP/DOWN) / Enter - Choose Scene\nESC - Close gravitySimulator");
+            sceneState = SceneState::SIM_CHOOSE;
+            return;
+        }
+
+        if (sceneState == SceneState::SIM_CHOOSE && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
         {
             sceneInit();
             sceneState = SceneState::SIM;
-            deltaClock->restart();
             return;
         }
 
@@ -130,49 +165,21 @@ void Scene::eventAction()
                 case SceneChooser::TEST_SCENE:
                 {
                     sceneChooser = SceneChooser::SCENE_2;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            "   TEST_SCENE\n"
-                            "   SCENE_0\n"
-                            "   SCENE_1\n"
-                            ">> SCENE_2\n"
-                    );
                     break;
                 }
                 case SceneChooser::SCENE_0:
                 {
                     sceneChooser = SceneChooser::TEST_SCENE;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            ">> TEST_SCENE\n"
-                            "   SCENE_0\n"
-                            "   SCENE_1\n"
-                            "   SCENE_2\n"
-                    );
                     break;
                 }
                 case SceneChooser::SCENE_1:
                 {
                     sceneChooser = SceneChooser::SCENE_0;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            "   TEST_SCENE\n"
-                            ">> SCENE_0\n"
-                            "   SCENE_1\n"
-                            "   SCENE_2\n"
-                    );
                     break;
                 }
                 case SceneChooser::SCENE_2:
                 {
                     sceneChooser = SceneChooser::SCENE_1;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            "   TEST_SCENE\n"
-                            "   SCENE_0\n"
-                            ">> SCENE_1\n"
-                            "   SCENE_2\n"
-                    );
                     break;
                 }
                 default:
@@ -188,46 +195,18 @@ void Scene::eventAction()
             switch (sceneChooser) {
                 case SceneChooser::TEST_SCENE: {
                     sceneChooser = SceneChooser::SCENE_0;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            "   TEST_SCENE\n"
-                            ">> SCENE_0\n"
-                            "   SCENE_1\n"
-                            "   SCENE_2\n"
-                    );
                     break;
                 }
                 case SceneChooser::SCENE_0: {
                     sceneChooser = SceneChooser::SCENE_1;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            "   TEST_SCENE\n"
-                            "   SCENE_0\n"
-                            ">> SCENE_1\n"
-                            "   SCENE_2\n"
-                    );
                     break;
                 }
                 case SceneChooser::SCENE_1: {
                     sceneChooser = SceneChooser::SCENE_2;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            "   TEST_SCENE\n"
-                            "   SCENE_0\n"
-                            "   SCENE_1\n"
-                            ">> SCENE_2\n"
-                    );
                     break;
                 }
                 case SceneChooser::SCENE_2: {
                     sceneChooser = SceneChooser::TEST_SCENE;
-                    simulationText->setString(
-                            "jaqubm/gravity-simulator> Choose scene:\n\n"
-                            ">> TEST_SCENE\n"
-                            "   SCENE_0\n"
-                            "   SCENE_1\n"
-                            "   SCENE_2\n"
-                    );
                     break;
                 }
                 default: {
@@ -240,6 +219,11 @@ void Scene::eventAction()
 }
 
 void Scene::sceneInit() {
+    gravitySources.clear();
+    particles.clear();
+
+    particles.reserve(PARTICLES_NUM);
+
     switch (sceneChooser)
     {
         case SceneChooser::TEST_SCENE:  //Randomized particles
@@ -293,30 +277,83 @@ void Scene::sceneInit() {
 
     simulationText->setCharacterSize(12);
     simulationText->setFillColor(sf::Color::White);
+
+    simulationControls->setPosition(10, H - 40);
+    simulationControls->setString("Space - Resume/Pause simulation\nEnter - Choose Scene\nESC - Close gravitySimulator");
 }
 
 void Scene::sceneChooserRender()
 {
+    switch (sceneChooser)
+    {
+        case SceneChooser::TEST_SCENE:
+        {
+            simulationText->setString(
+                    "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    ">> TEST_SCENE\n"
+                    "   SCENE_0\n"
+                    "   SCENE_1\n"
+                    "   SCENE_2\n"
+            );
+            break;
+        }
+        case SceneChooser::SCENE_0:
+        {
+            simulationText->setString(
+                    "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_SCENE\n"
+                    ">> SCENE_0\n"
+                    "   SCENE_1\n"
+                    "   SCENE_2\n"
+            );
+            break;
+        }
+        case SceneChooser::SCENE_1:
+        {
+            simulationText->setString(
+                    "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_SCENE\n"
+                    "   SCENE_0\n"
+                    ">> SCENE_1\n"
+                    "   SCENE_2\n"
+            );
+            break;
+        }
+        case SceneChooser::SCENE_2:
+        {
+            simulationText->setString(
+                    "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_SCENE\n"
+                    "   SCENE_0\n"
+                    "   SCENE_1\n"
+                    ">> SCENE_2\n"
+            );
+            break;
+        }
+        default:
+        {
+            std::cout << "SceneChooser error" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
     window->draw(*simulationText);
     window->draw(*background);
 
     window->draw(*simulationText);
+    window->draw(*simulationControls);
 }
 
 void Scene::simulationRender()
 {
-    //Rendering Background
     window->draw(*background);
 
-    //Rendering GravitySources
     for (auto & gravitySource : gravitySources) gravitySource.render(*window);
 
-    //Rendering Particles
     for (auto & particle : particles) particle.render(*window);
 
-    //Rendering simulationText
     simulationText->setString(
             "FPS: " + std::to_string(fpsCounter) +
             "\ndeltaTime: " + std::to_string(deltaTime->asSeconds()));
     window->draw(*simulationText);
+    window->draw(*simulationControls);
 }

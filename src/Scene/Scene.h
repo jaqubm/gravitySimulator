@@ -11,7 +11,8 @@ enum class SceneChooser {
 
 enum class SceneState {
     SIM_CHOOSE,
-    SIM
+    SIM,
+    SIM_PAUSE
 };
 
 class Scene {
@@ -29,6 +30,7 @@ class Scene {
 
     sf::Font * font;
     sf::Text * simulationText;
+    sf::Text * simulationControls;
 
     int fpsCounter = 0;
 
