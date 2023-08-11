@@ -129,19 +129,19 @@ void Scene::eventAction()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window->close();
 
-        if (sceneState == SceneState::SIM && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+        if (sceneState == SceneState::SIM && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             sceneState = SceneState::SIM_PAUSE;
             return;
         }
 
-        if (sceneState == SceneState::SIM_PAUSE && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+        if (sceneState == SceneState::SIM_PAUSE && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             sceneState = SceneState::SIM;
             return;
         }
 
-        if ((sceneState == SceneState::SIM || sceneState == SceneState::SIM_PAUSE) && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+        if ((sceneState == SceneState::SIM || sceneState == SceneState::SIM_PAUSE) && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
         {
             simulationText->setCharacterSize(20);
             simulationText->setFillColor(sf::Color::Green);
@@ -151,7 +151,7 @@ void Scene::eventAction()
             return;
         }
 
-        if (sceneState == SceneState::SIM_CHOOSE && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+        if (sceneState == SceneState::SIM_CHOOSE && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
         {
             sceneInit();
             sceneState = SceneState::SIM;

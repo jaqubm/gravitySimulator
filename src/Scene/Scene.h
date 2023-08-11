@@ -48,7 +48,6 @@ public:
     Scene();
     ~Scene();
 
-    //Main loop
     void run();
     void update();
 
