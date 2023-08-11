@@ -20,8 +20,9 @@ Scene::Scene()
     background = new sf::RectangleShape(sf::Vector2f(W, H));
     background->setFillColor(sf::Color(20, 25, 30));
 
-    //Creating deltaCLock
+    //Creating deltaCLock and deltaTime
     deltaClock = new sf::Clock();
+    deltaTime = new sf::Time();
 
     //Creating and loading up font
     font = new sf::Font();
@@ -91,20 +92,17 @@ void Scene::run()
 
 void Scene::update()
 {
-    //Updating framesCounter
-    framesCounter++;
-
     //Calculating deltaTime
-    sf::Time deltaTime = deltaClock->restart();
+    *deltaTime = deltaClock->restart();
 
     //Calculating current fps
-    fpsCounter = static_cast<int>(1.f / deltaTime.asSeconds());
+    fpsCounter = static_cast<int>(1.f / deltaTime->asSeconds());
 
     //Updating physics
     for (auto & particle : particles)
     {
-        particle.updatePhysics(gravitySources, deltaTime.asSeconds());
-        particle.updatePosition(gravitySources, deltaTime.asSeconds());
+        particle.updatePhysics(gravitySources, deltaTime->asSeconds());
+        particle.updatePosition(gravitySources, deltaTime->asSeconds());
     }
 }
 
@@ -248,7 +246,7 @@ void Scene::sceneInit() {
         {
             std::cout << "SceneChooser::TEST_SCENE" << std::endl;
 
-            gravitySources.emplace_back(W * .5f, H * .5f, 144000, 100);
+            gravitySources.emplace_back(W * .5f, H * .5f, 144000, 70);
 
             for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*mt), randPosY(*mt), randVel(*mt), randVel(*mt), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
 
@@ -258,9 +256,9 @@ void Scene::sceneInit() {
         {
             std::cout << "SceneChooser::SCENE_0" << std::endl;
 
-            gravitySources.emplace_back(W * .5f, H * .5f, 36000, 150);
+            gravitySources.emplace_back(W * .5f, H * .5f, 36000, 90);
 
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 300, H * .5f + 300, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / PARTICLES_NUM) * i), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 200, H * .5f + 200, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / PARTICLES_NUM) * i), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
 
             break;
         }
@@ -279,10 +277,10 @@ void Scene::sceneInit() {
         {
             std::cout << "SceneChooser::SCENE_2" << std::endl;
 
-            gravitySources.emplace_back(W * .5f - 500, H * .5f,  36000, 90);
-            gravitySources.emplace_back(W * .5f + 500, H * .5f, 36000, 90);
+            gravitySources.emplace_back(W * .5f - 300, H * .5f,  36000, 60);
+            gravitySources.emplace_back(W * .5f + 300, H * .5f, 36000, 60);
 
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f + 250, .2f, static_cast<float>(.3f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f + 250, .23f, static_cast<float>(.3f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
 
             break;
         }
@@ -317,6 +315,8 @@ void Scene::simulationRender()
     for (auto & particle : particles) particle.render(*window);
 
     //Rendering simulationText
-    simulationText->setString("FPS: " + std::to_string(fpsCounter) + "\nFrame: " + std::to_string(framesCounter));
+    simulationText->setString(
+            "FPS: " + std::to_string(fpsCounter) +
+            "\ndeltaTime: " + std::to_string(deltaTime->asSeconds()));
     window->draw(*simulationText);
 }

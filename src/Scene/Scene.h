@@ -25,12 +25,12 @@ class Scene {
     sf::RectangleShape * background;
 
     sf::Clock * deltaClock;
+    sf::Time *deltaTime;
 
     sf::Font * font;
     sf::Text * simulationText;
 
     int fpsCounter = 0;
-    long long framesCounter = 0;
 
     std::mt19937 * mt;
     std::random_device rd;
