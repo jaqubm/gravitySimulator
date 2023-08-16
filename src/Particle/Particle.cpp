@@ -41,6 +41,10 @@ void Particle::updatePosition(std::vector<GravitySource>& gravitySources, float 
     relPos.y = pos.y - radius;
 
     circleShape.setPosition(relPos);
+
+    //TODO: Delete when new collision is done !!!
+    line[0] = sf::Vertex(sf::Vector2f(pos.x, pos.y), sf::Color::Red);
+    line[1] = sf::Vertex(sf::Vector2f(pos.x + (vel.x * deltaTime * 1000), pos.y + (vel.y * deltaTime * 1000)), sf::Color::Red);
 }
 
 void Particle::updatePhysics(std::vector<GravitySource>& gravitySources, float deltaTime)
