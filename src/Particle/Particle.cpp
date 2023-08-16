@@ -1,37 +1,44 @@
+#include <cmath>
+
 #include "include.h"
 
-bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) {
-    sf::Vector2f diff = { pos.x - gravitySource.getPos().x, pos.y - gravitySource.getPos().y };
-    double a = vel.x * vel.x + vel.y * vel.y;
-    double b = 2 * (diff.x * vel.x + diff.y * vel.y);
-    double c = diff.x * diff.x + diff.y * diff.y - gravitySource.getRadius() * gravitySource.getRadius();
+bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
+{
+    sf::Vector2f diff {
+            pos.x - gravitySource.getPos().x,
+            pos.y - gravitySource.getPos().y
+    };
 
-    double discriminant = b * b - 4 * a * c;
+    float a = vel.x * vel.x + vel.y * vel.y;
+    float b = 2 * (diff.x * vel.x + diff.y * vel.y);
+    float c = diff.x * diff.x + diff.y * diff.y - gravitySource.getRadius() * gravitySource.getRadius();
 
-    if (discriminant < 0) {
-        return false; // No collision
-    }
+    float discriminant = b * b - 4 * a * c;
 
-    double sqrtDiscriminant = sqrt(discriminant);
-    double t1 = (-b + sqrtDiscriminant) / (2 * a);
-    double t2 = (-b - sqrtDiscriminant) / (2 * a);
+    if (discriminant < 0) return false; // No collision
 
-    double t = std::min(t1, t2);
+    float sqrtDiscriminant = std::sqrt(discriminant);
+    float t1 = (-b + sqrtDiscriminant) / (2 * a);
+    float t2 = (-b - sqrtDiscriminant) / (2 * a);
 
-    if (t >= 0 && t <= 10)
+    //Calculating beforeCollisionMovementPercent
+    float befColMovPercent = std::min(t1, t2) * .1f;
+
+    if (befColMovPercent >= 0 && befColMovPercent <= 1)
     {
         //Calculating pointOfContact with gravitySource
-        sf::Vector2f pointOfContact{};
-        pointOfContact.x = static_cast<float>(pos.x + t * vel.x);
-        pointOfContact.y = static_cast<float>(pos.y + t * vel.y);
+        sf::Vector2f pointOfContact {
+                pos.x + befColMovPercent * vel.x,
+                pos.y + befColMovPercent * vel.y
+        };
 
-        std::cout << "\nCollision\n";
-        std::cout << pos.x << " " << pos.y << "\n";
-        std::cout << pointOfContact.x << " " << pointOfContact.y << std::endl;
+        //Updating Position to the pointOfContact with gravitySource
+        pos.x = pointOfContact.x;
+        pos.y = pointOfContact.y;
 
         //Normal Vector
-        float distanceX = gravitySource.getPos().x - pos.x + vel.x * deltaTime * 1000;
-        float distanceY = gravitySource.getPos().y - pos.y + vel.y * deltaTime * 1000;
+        float distanceX = gravitySource.getPos().x - pointOfContact.x;
+        float distanceY = gravitySource.getPos().y - pointOfContact.y;
 
         //Distance between GravitySource and Particle
         float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
@@ -50,6 +57,13 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
         //Calculating new Velocity Vector
         vel.x = vel.x - 2 * projectionX;
         vel.y = vel.y - 2 * projectionY;
+
+        //Calculating afterCollisionMovementPercent
+        float afterColMovPercent = 1.f - befColMovPercent;
+
+        //Updating Position after Collision with deltaTime as milliSeconds
+        pos.x += vel.x * afterColMovPercent * deltaTime * 1000;
+        pos.y += vel.y * afterColMovPercent * deltaTime * 1000;
 
         return true;
     }
@@ -75,17 +89,13 @@ void Particle::updatePosition(std::vector<GravitySource> & gravitySources, float
         //Updating Position with deltaTime as milliSeconds
         pos.x += vel.x * deltaTime * 1000;
         pos.y += vel.y * deltaTime * 1000;
-
-        //Updating Render Position
-        relPos.x = pos.x - radius;
-        relPos.y = pos.y - radius;
-
-        circleShape.setPosition(relPos);
     }
 
-    //TODO: Delete when new collision is done !!!
-    line[0] = sf::Vertex(sf::Vector2f(pos.x, pos.y), sf::Color::Red);
-    line[1] = sf::Vertex(sf::Vector2f(pos.x + (vel.x * deltaTime * 1000), pos.y + (vel.y * deltaTime * 1000)), sf::Color::Red);
+    //Updating Render Position
+    relPos.x = pos.x - radius;
+    relPos.y = pos.y - radius;
+
+    circleShape.setPosition(relPos);
 }
 
 void Particle::updatePhysics(std::vector<GravitySource> & gravitySources, float deltaTime)

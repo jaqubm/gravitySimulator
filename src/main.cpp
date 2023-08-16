@@ -1,7 +1,5 @@
 #include "include.h"
 
-//TODO: Create more advanced collision response
-
 int main()
 {
     Scene scene;

@@ -236,15 +236,8 @@ void Scene::sceneInit() {
         {
             window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
 
-            gravitySources.emplace_back(W * .5f + 300, H * .5f, 144000, 100);
-            gravitySources.emplace_back(W * .5f - 300, H * .5f, 144000, 100);
-
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f, randVel(*mt), 0, 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
-
-            /*
             gravitySources.emplace_back(W * .5f, H * .5f, 144000, 70);
             for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*mt), randPosY(*mt), randVel(*mt), randVel(*mt), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
-            */
 
             break;
         }
@@ -360,11 +353,7 @@ void Scene::simulationRender()
 
     for (auto & gravitySource : gravitySources) gravitySource.render(*window);
 
-    for (auto & particle : particles)
-    {
-        particle.render(*window);
-        particle.renderVelocity(*window);
-    }
+    for (auto & particle : particles) particle.render(*window);
 
     simulationText->setString(
             "FPS: " + std::to_string(fpsCounter) +

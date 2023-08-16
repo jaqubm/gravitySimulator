@@ -6,9 +6,6 @@ class Particle : public Object
 {
     sf::Vector2f vel;
 
-    //TODO: Delete when new collision is done !!!
-    sf::Vertex line[2];
-
 public:
     Particle(float pos_x, float pos_y, float vel_x, float vel_y, float radius, sf::Color color)
     {
@@ -26,12 +23,6 @@ public:
         circleShape.setPosition(pos);
         circleShape.setFillColor(color);
         circleShape.setRadius(radius);
-    }
-
-    //TODO: Delete when new collision is done !!!
-    void renderVelocity(sf::RenderWindow &window) const
-    {
-        window.draw(line, 2, sf::Lines);
     }
 
     bool checkCollision(GravitySource & gravitySource, float & deltaTime);
