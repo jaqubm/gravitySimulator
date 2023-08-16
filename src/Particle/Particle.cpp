@@ -18,12 +18,9 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
 
     double t = std::min(t1, t2);
 
-    float distanceX = gravitySource.getPos().x - pos.x + vel.x * deltaTime * 1000;
-    float distanceY = gravitySource.getPos().y - pos.y + vel.y * deltaTime * 1000;
-
-    float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
-
-    if ((t >= 0 && t <= 10)) {
+    if (t >= 0 && t <= 10)
+    {
+        //Calculating pointOfContact with gravitySource
         sf::Vector2f pointOfContact{};
         pointOfContact.x = static_cast<float>(pos.x + t * vel.x);
         pointOfContact.y = static_cast<float>(pos.y + t * vel.y);
@@ -32,27 +29,12 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
         std::cout << pos.x << " " << pos.y << "\n";
         std::cout << pointOfContact.x << " " << pointOfContact.y << std::endl;
 
-        //Simplifying division to speed up calculations
-        float inverseDistance = 1.f / distance;
+        //Normal Vector
+        float distanceX = gravitySource.getPos().x - pos.x + vel.x * deltaTime * 1000;
+        float distanceY = gravitySource.getPos().y - pos.y + vel.y * deltaTime * 1000;
 
-        //Normalized Unit Vector
-        float normalizedX = inverseDistance * distanceX;
-        float normalizedY = inverseDistance * distanceY;
-
-        //Projection Vector
-        float projectionX = (vel.x * normalizedX + vel.y * normalizedY) * normalizedX;
-        float projectionY = (vel.x * normalizedX + vel.y * normalizedY) * normalizedY;
-
-        //Calculating new Velocity Vector
-        vel.x = vel.x - 2 * projectionX;
-        vel.y = vel.y - 2 * projectionY;
-
-        return true;
-    }
-    else if (distance <= radius + gravitySource.getRadius())
-    {
-        std::cout << "\nCollision\n";
-        std::cout << gravitySource.getRadius() << " " << distance << std::endl;
+        //Distance between GravitySource and Particle
+        float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
 
         //Simplifying division to speed up calculations
         float inverseDistance = 1.f / distance;
@@ -68,6 +50,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
         //Calculating new Velocity Vector
         vel.x = vel.x - 2 * projectionX;
         vel.y = vel.y - 2 * projectionY;
+
         return true;
     }
 
