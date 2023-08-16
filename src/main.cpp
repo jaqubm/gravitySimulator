@@ -1,5 +1,7 @@
 #include "include.h"
 
+//TODO: Add comments describing code
+
 int main()
 {
     Scene scene;
