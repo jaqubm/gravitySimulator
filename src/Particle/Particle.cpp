@@ -25,8 +25,8 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
 
     if ((t >= 0 && t <= 10)) {
         sf::Vector2f pointOfContact{};
-        pointOfContact.x = pos.x + t * vel.x;
-        pointOfContact.y = pos.y + t * vel.y;
+        pointOfContact.x = static_cast<float>(pos.x + t * vel.x);
+        pointOfContact.y = static_cast<float>(pos.y + t * vel.y);
 
         std::cout << "\nCollision\n";
         std::cout << pos.x << " " << pos.y << "\n";
