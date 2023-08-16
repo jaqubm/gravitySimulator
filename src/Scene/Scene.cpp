@@ -55,7 +55,7 @@ Scene::Scene()
     simulationControls->setString("Arrows (UP/DOWN) / Enter - Choose Scene\n"
                                   "ESC - Close gravitySimulator");
 
-    sceneChooser = SceneChooser::TEST_SCENE;
+    sceneChooser = SceneChooser::TEST_COLLISION;
     sceneState = SceneState::SIM_CHOOSE;
 }
 
@@ -168,9 +168,14 @@ void Scene::eventAction()
         {
             switch (sceneChooser)
             {
-                case SceneChooser::TEST_SCENE:
+                case SceneChooser::TEST_COLLISION:
                 {
                     sceneChooser = SceneChooser::SCENE_2;
+                    break;
+                }
+                case SceneChooser::TEST_SCENE:
+                {
+                    sceneChooser = SceneChooser::TEST_COLLISION;
                     break;
                 }
                 case SceneChooser::SCENE_0:
@@ -199,20 +204,29 @@ void Scene::eventAction()
         if(sceneState == SceneState::SIM_CHOOSE && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
             switch (sceneChooser) {
-                case SceneChooser::TEST_SCENE: {
+                case SceneChooser::TEST_COLLISION:
+                {
+                    sceneChooser = SceneChooser::TEST_SCENE;
+                    break;
+                }
+                case SceneChooser::TEST_SCENE:
+                {
                     sceneChooser = SceneChooser::SCENE_0;
                     break;
                 }
-                case SceneChooser::SCENE_0: {
+                case SceneChooser::SCENE_0:
+                {
                     sceneChooser = SceneChooser::SCENE_1;
                     break;
                 }
-                case SceneChooser::SCENE_1: {
+                case SceneChooser::SCENE_1:
+                {
                     sceneChooser = SceneChooser::SCENE_2;
                     break;
                 }
-                case SceneChooser::SCENE_2: {
-                    sceneChooser = SceneChooser::TEST_SCENE;
+                case SceneChooser::SCENE_2:
+                {
+                    sceneChooser = SceneChooser::TEST_COLLISION;
                     break;
                 }
                 default: {
@@ -232,6 +246,17 @@ void Scene::sceneInit() {
 
     switch (sceneChooser)
     {
+        case SceneChooser::TEST_COLLISION:
+        {
+            window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
+
+            gravitySources.emplace_back(W * .5f - 300, H * .5f, 144000, 70);
+            gravitySources.emplace_back(W * .5f + 300, H * .5f, 144000, 70);
+
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f, randVel(*mt), 0, 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+
+            break;
+        }
         case SceneChooser::TEST_SCENE:  //Randomized particles
         {
             window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
@@ -290,10 +315,23 @@ void Scene::sceneChooserRender()
 {
     switch (sceneChooser)
     {
+        case SceneChooser::TEST_COLLISION:
+        {
+            simulationText->setString(
+                    "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    ">> TEST_COLLISION\n"
+                    "   TEST_SCENE\n"
+                    "   SCENE_0\n"
+                    "   SCENE_1\n"
+                    "   SCENE_2\n"
+            );
+            break;
+        }
         case SceneChooser::TEST_SCENE:
         {
             simulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_COLLISION\n"
                     ">> TEST_SCENE\n"
                     "   SCENE_0\n"
                     "   SCENE_1\n"
@@ -305,6 +343,7 @@ void Scene::sceneChooserRender()
         {
             simulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_COLLISION\n"
                     "   TEST_SCENE\n"
                     ">> SCENE_0\n"
                     "   SCENE_1\n"
@@ -316,6 +355,7 @@ void Scene::sceneChooserRender()
         {
             simulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_COLLISION\n"
                     "   TEST_SCENE\n"
                     "   SCENE_0\n"
                     ">> SCENE_1\n"
@@ -327,6 +367,7 @@ void Scene::sceneChooserRender()
         {
             simulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
+                    "   TEST_COLLISION\n"
                     "   TEST_SCENE\n"
                     "   SCENE_0\n"
                     "   SCENE_1\n"

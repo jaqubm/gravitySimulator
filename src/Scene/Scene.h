@@ -3,6 +3,7 @@
 #include "include.h"
 
 enum class SceneChooser {
+    TEST_COLLISION,
     TEST_SCENE,
     SCENE_0,
     SCENE_1,
