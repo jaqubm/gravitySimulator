@@ -1,6 +1,6 @@
 #include "include.h"
 
-//TODO: Add comments describing code
+//TODO: Maybe in the future add multiThreading to render and calculate more Particles at the same time
 
 int main()
 {

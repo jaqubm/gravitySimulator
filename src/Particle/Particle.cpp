@@ -64,6 +64,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
 
 void Particle::updatePosition(std::vector<GravitySource> & gravitySources, float deltaTime)
 {
+    //Detecting collision
     bool collision = false;
     for (auto &gravitySource : gravitySources)
     {

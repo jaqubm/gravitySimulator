@@ -42,7 +42,7 @@ Scene::Scene()
             "   SCENE_0\n"
             "   SCENE_1\n"
             "   SCENE_2\n"
-    );
+            );
 
     //Creating and setting up simulationControls
     simulationControls = new sf::Text();
@@ -52,8 +52,10 @@ Scene::Scene()
     simulationControls->setCharacterSize(10);
     simulationControls->setFillColor(sf::Color::White);
 
-    simulationControls->setString("Arrows (UP/DOWN) / Enter - Choose Scene\n"
-                                  "ESC - Close gravitySimulator");
+    simulationControls->setString(
+            "Arrows (UP/DOWN) / Enter - Choose Scene\n"
+            "ESC - Close gravitySimulator"
+            );
 
     sceneChooser = SceneChooser::TEST_COLLISION;
     sceneState = SceneState::SIM_CHOOSE;
@@ -119,6 +121,12 @@ void Scene::update()
         particle.updatePhysics(gravitySources, deltaTime->asSeconds());
         particle.updatePosition(gravitySources, deltaTime->asSeconds());
     }
+
+    //Updating displayed fpsCounter and deltaTime
+    simulationText->setString(
+            "FPS: " + std::to_string(fpsCounter) +
+            "\ndeltaTime: " + std::to_string(deltaTime->asSeconds() * 1000) + " ms"
+    );
 }
 
 void Scene::eventAction()
@@ -126,22 +134,27 @@ void Scene::eventAction()
     sf::Event event{};
     while (window->pollEvent(event))
     {
+        //Closing window
         if (event.type == sf::Event::Closed) window->close();
 
+        //Closing window with ESC button
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window->close();
 
+        //Pausing Simulation
         if (sceneState == SceneState::SIM && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             sceneState = SceneState::SIM_PAUSE;
             return;
         }
 
+        //Resuming paused Simulation
         if (sceneState == SceneState::SIM_PAUSE && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             sceneState = SceneState::SIM;
             return;
         }
 
+        //Going back to SIM_CHOOSE state from Simulation
         if ((sceneState == SceneState::SIM || sceneState == SceneState::SIM_PAUSE) && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
         {
             window->setTitle("gravitySimulator by jaqubm");
@@ -150,13 +163,16 @@ void Scene::eventAction()
             simulationText->setFillColor(sf::Color::Green);
 
             simulationControls->setPosition(10, H - 30);
-            simulationControls->setString("Arrows (UP/DOWN) / Enter - Choose Scene\n"
-                                          "ESC - Close gravitySimulator");
+            simulationControls->setString(
+                    "Arrows (UP/DOWN) / Enter - Choose Scene\n"
+                    "ESC - Close gravitySimulator"
+                    );
 
             sceneState = SceneState::SIM_CHOOSE;
             return;
         }
 
+        //Initializing Simulation after choosing Scene
         if (sceneState == SceneState::SIM_CHOOSE && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
         {
             sceneInit();
@@ -164,6 +180,7 @@ void Scene::eventAction()
             return;
         }
 
+        //Changing currently selected Scene - UP
         if(sceneState == SceneState::SIM_CHOOSE && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
             switch (sceneChooser)
@@ -201,6 +218,7 @@ void Scene::eventAction()
             }
         }
 
+        //Changing currently selected Scene - DOWN
         if(sceneState == SceneState::SIM_CHOOSE && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
             switch (sceneChooser) {
@@ -246,7 +264,7 @@ void Scene::sceneInit() {
 
     switch (sceneChooser)
     {
-        case SceneChooser::TEST_COLLISION:
+        case SceneChooser::TEST_COLLISION:  //Particles moving between two gravitySources
         {
             window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
 
@@ -266,7 +284,7 @@ void Scene::sceneInit() {
 
             break;
         }
-        case SceneChooser::SCENE_0: //Particles orbiting gravitySource
+        case SceneChooser::SCENE_0: //Particles orbiting around gravitySource
         {
             window->setTitle("gravitySimulator by jaqubm (SCENE_0)");
 
@@ -275,7 +293,7 @@ void Scene::sceneInit() {
 
             break;
         }
-        case SceneChooser::SCENE_1: //Particles orbiting gravitySources
+        case SceneChooser::SCENE_1: //Particles orbiting around gravitySources
         {
             window->setTitle("gravitySimulator by jaqubm (SCENE_1)");
 
@@ -306,9 +324,11 @@ void Scene::sceneInit() {
     simulationText->setFillColor(sf::Color::White);
 
     simulationControls->setPosition(10, H - 40);
-    simulationControls->setString("Space - Resume/Pause simulation\n"
-                                  "Enter - Choose Scene\n"
-                                  "ESC - Close gravitySimulator");
+    simulationControls->setString(
+            "Space - Resume/Pause simulation\n"
+            "Enter - Choose Scene\n"
+            "ESC - Close gravitySimulator"
+            );
 }
 
 void Scene::sceneChooserRender()
@@ -324,7 +344,7 @@ void Scene::sceneChooserRender()
                     "   SCENE_0\n"
                     "   SCENE_1\n"
                     "   SCENE_2\n"
-            );
+                    );
             break;
         }
         case SceneChooser::TEST_SCENE:
@@ -336,7 +356,7 @@ void Scene::sceneChooserRender()
                     "   SCENE_0\n"
                     "   SCENE_1\n"
                     "   SCENE_2\n"
-            );
+                    );
             break;
         }
         case SceneChooser::SCENE_0:
@@ -348,7 +368,7 @@ void Scene::sceneChooserRender()
                     ">> SCENE_0\n"
                     "   SCENE_1\n"
                     "   SCENE_2\n"
-            );
+                    );
             break;
         }
         case SceneChooser::SCENE_1:
@@ -360,7 +380,7 @@ void Scene::sceneChooserRender()
                     "   SCENE_0\n"
                     ">> SCENE_1\n"
                     "   SCENE_2\n"
-            );
+                    );
             break;
         }
         case SceneChooser::SCENE_2:
@@ -372,7 +392,7 @@ void Scene::sceneChooserRender()
                     "   SCENE_0\n"
                     "   SCENE_1\n"
                     ">> SCENE_2\n"
-            );
+                    );
             break;
         }
         default:
@@ -396,9 +416,6 @@ void Scene::simulationRender()
 
     for (auto & particle : particles) particle.render(*window);
 
-    simulationText->setString(
-            "FPS: " + std::to_string(fpsCounter) +
-            "\ndeltaTime: " + std::to_string(deltaTime->asSeconds() * 1000) + " ms");
     window->draw(*simulationText);
     window->draw(*simulationControls);
 }
