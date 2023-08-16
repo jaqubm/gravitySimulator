@@ -1,47 +1,38 @@
-#include <cmath>
-
 #include "include.h"
 
 bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
 {
-    sf::Vector2f diff {
-            pos.x - gravitySource.getPos().x,
-            pos.y - gravitySource.getPos().y
-    };
+    //Distance between GravitySource and Particle after updating position with velocity
+    float distanceX = gravitySource.getPos().x - (pos.x + vel.x * deltaTime * 1000);
+    float distanceY = gravitySource.getPos().y - (pos.y + vel.y * deltaTime * 1000);
+    float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
 
-    float a = vel.x * vel.x + vel.y * vel.y;
-    float b = 2 * (diff.x * vel.x + diff.y * vel.y);
-    float c = diff.x * diff.x + diff.y * diff.y - gravitySource.getRadius() * gravitySource.getRadius();
-
-    float discriminant = b * b - 4 * a * c;
-
-    if (discriminant < 0) return false; // No collision
-
-    float sqrtDiscriminant = std::sqrt(discriminant);
-    float t1 = (-b + sqrtDiscriminant) / (2 * a);
-    float t2 = (-b - sqrtDiscriminant) / (2 * a);
-
-    //Calculating beforeCollisionMovementPercent
-    float befColMovPercent = std::min(t1, t2) * .1f;
-
-    if (befColMovPercent >= 0 && befColMovPercent <= 1)
+    if (distance <= radius + gravitySource.getRadius())
     {
-        //Calculating pointOfContact with gravitySource
-        sf::Vector2f pointOfContact {
-                pos.x + befColMovPercent * vel.x,
-                pos.y + befColMovPercent * vel.y
-        };
+        //Movement before collision with gravitySource
 
-        //Updating Position to the pointOfContact with gravitySource
-        pos.x = pointOfContact.x;
-        pos.y = pointOfContact.y;
+        //Distance between GravitySource and Particle before Collision
+        distanceX = gravitySource.getPos().x - pos.x;
+        distanceY = gravitySource.getPos().y - pos.y;
+        distance = std::sqrt(distanceX * distanceX + distanceY * distanceY) - radius - gravitySource.getRadius();
+
+        //Calculating distance Particle needs to collide with gravitySource
+        float vectorDistance = std::sqrt((vel.x * deltaTime * 1000) * (vel.x * deltaTime * 1000) + (vel.y * deltaTime * 1000) * (vel.y * deltaTime * 1000));
+        float collisionMovementMultiplier = distance / vectorDistance;
+
+        //Updating Position before Collision with deltaTime as milliSeconds
+        pos.x += vel.x * deltaTime * 1000 * collisionMovementMultiplier;
+        pos.y += vel.y * deltaTime * 1000 * collisionMovementMultiplier;
+
+
+        //Movement after collision with gravitySource
 
         //Normal Vector
-        float distanceX = gravitySource.getPos().x - pointOfContact.x;
-        float distanceY = gravitySource.getPos().y - pointOfContact.y;
+        distanceX = gravitySource.getPos().x - pos.x;
+        distanceY = gravitySource.getPos().y - pos.y;
 
-        //Distance between GravitySource and Particle
-        float distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
+        //Distance between GravitySource and Particle in collision
+        distance = std::sqrt(distanceX * distanceX + distanceY * distanceY);
 
         //Simplifying division to speed up calculations
         float inverseDistance = 1.f / distance;
@@ -58,12 +49,12 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
         vel.x = vel.x - 2 * projectionX;
         vel.y = vel.y - 2 * projectionY;
 
-        //Calculating afterCollisionMovementPercent
-        float afterColMovPercent = 1.f - befColMovPercent;
+        //Calculating distance Particle has left after collision with gravitySource
+        collisionMovementMultiplier = 1.f - collisionMovementMultiplier;
 
         //Updating Position after Collision with deltaTime as milliSeconds
-        pos.x += vel.x * afterColMovPercent * deltaTime * 1000;
-        pos.y += vel.y * afterColMovPercent * deltaTime * 1000;
+        pos.x += vel.x * deltaTime * 1000 * collisionMovementMultiplier;
+        pos.y += vel.y * deltaTime * 1000 * collisionMovementMultiplier;
 
         return true;
     }
@@ -74,7 +65,6 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
 void Particle::updatePosition(std::vector<GravitySource> & gravitySources, float deltaTime)
 {
     bool collision = false;
-
     for (auto &gravitySource : gravitySources)
     {
         if (checkCollision(gravitySource, deltaTime))
@@ -84,9 +74,9 @@ void Particle::updatePosition(std::vector<GravitySource> & gravitySources, float
         }
     }
 
+    //Updating Position with deltaTime as milliSeconds if there was no collision
     if (!collision)
     {
-        //Updating Position with deltaTime as milliSeconds
         pos.x += vel.x * deltaTime * 1000;
         pos.y += vel.y * deltaTime * 1000;
     }
