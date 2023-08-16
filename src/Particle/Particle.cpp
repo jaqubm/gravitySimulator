@@ -30,7 +30,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
 
         std::cout << "\nCollision\n";
         std::cout << pos.x << " " << pos.y << "\n";
-        std::cout << pointOfContact.x << " " << pointOfContact.y << "\n";
+        std::cout << pointOfContact.x << " " << pointOfContact.y << std::endl;
 
         //Simplifying division to speed up calculations
         float inverseDistance = 1.f / distance;
@@ -51,6 +51,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime) 
     }
     else if (distance <= radius + gravitySource.getRadius())
     {
+        std::cout << "\nCollision\n";
         std::cout << gravitySource.getRadius() << " " << distance << std::endl;
 
         //Simplifying division to speed up calculations
