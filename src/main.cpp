@@ -1,6 +1,5 @@
 #include "include.h"
 
-//TODO: Create more advanced collision detection
 //TODO: Create more advanced collision response
 
 int main()

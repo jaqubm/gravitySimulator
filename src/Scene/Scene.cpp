@@ -117,6 +117,7 @@ void Scene::update()
     for (auto & particle : particles)
     {
         particle.updatePhysics(gravitySources, deltaTime->asSeconds());
+
         particle.updatePosition(gravitySources, deltaTime->asSeconds());
     }
 }
