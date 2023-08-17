@@ -266,7 +266,7 @@ void Scene::sceneInit() {
     {
         case SceneChooser::TEST_COLLISION:  //Particles moving between two gravitySources
         {
-            pWindow->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
+            pWindow->setTitle("gravitySimulator by jaqubm (TEST_COLLISION)");
 
             gravitySources.emplace_back(W * .5f - 300, H * .5f, 144000, 70);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 144000, 70);
