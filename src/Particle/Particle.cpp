@@ -20,7 +20,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
         float vectorDistance = std::sqrt((vel.x * deltaTime * 1000) * (vel.x * deltaTime * 1000) + (vel.y * deltaTime * 1000) * (vel.y * deltaTime * 1000));
         float collisionMovementMultiplier = distance / vectorDistance;
 
-        //Updating Position before Collision with deltaTime as milliSeconds
+        //Updating Position before Collision with pDeltaTime as milliSeconds
         pos.x += vel.x * deltaTime * 1000 * collisionMovementMultiplier;
         pos.y += vel.y * deltaTime * 1000 * collisionMovementMultiplier;
 
@@ -52,7 +52,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
         //Calculating distance Particle has left after collision with gravitySource
         collisionMovementMultiplier = 1.f - collisionMovementMultiplier;
 
-        //Updating Position after Collision with deltaTime as milliSeconds
+        //Updating Position after Collision with pDeltaTime as milliSeconds
         pos.x += vel.x * deltaTime * 1000 * collisionMovementMultiplier;
         pos.y += vel.y * deltaTime * 1000 * collisionMovementMultiplier;
 
@@ -75,7 +75,7 @@ void Particle::updatePosition(std::vector<GravitySource> & gravitySources, float
         }
     }
 
-    //Updating Position with deltaTime as milliSeconds if there was no collision
+    //Updating Position with pDeltaTime as milliSeconds if there was no collision
     if (!collision)
     {
         pos.x += vel.x * deltaTime * 1000;
@@ -113,7 +113,7 @@ void Particle::updatePhysics(std::vector<GravitySource> & gravitySources, float 
         float accelerationX = normalizedX * gravitySource.getStrength() * inverseSquareDropOff;
         float accelerationY = normalizedY * gravitySource.getStrength() * inverseSquareDropOff;
 
-        //Updating Velocity with deltaTime as Seconds
+        //Updating Velocity with pDeltaTime as Seconds
         vel.x += accelerationX * deltaTime;
         vel.y += accelerationY * deltaTime;
     }

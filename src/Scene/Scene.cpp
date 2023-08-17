@@ -3,40 +3,40 @@
 Scene::Scene()
 {
     //Using new random implemented in C++11
-    mt = new std::mt19937(rd());
+    pMt = new std::mt19937(rd());
     randVel = std::uniform_real_distribution<float>(MIN_VEL, MAX_VEL);
     randPosX = std::uniform_real_distribution<float>(MIN_POS, MAX_POS);
     randPosY = std::uniform_real_distribution<float>(MIN_POS, MAX_POS);
 
     //Setting up Antialiasing
-    settings = new sf::ContextSettings();
-    settings->antialiasingLevel = 8;
+    pSettings = new sf::ContextSettings();
+    pSettings->antialiasingLevel = 8;
 
-    //Creating and setting up window
-    window = new sf::RenderWindow(sf::VideoMode(W, H), "gravitySimulator by jaqubm", sf::Style::Close | sf::Style::Titlebar, *settings);
-    window->setFramerateLimit(FPS);
+    //Creating and setting up pWindow
+    pWindow = new sf::RenderWindow(sf::VideoMode(W, H), "gravitySimulator by jaqubm", sf::Style::Close | sf::Style::Titlebar, *pSettings);
+    pWindow->setFramerateLimit(FPS);
 
     //Creating Background
-    background = new sf::RectangleShape(sf::Vector2f(W, H));
-    background->setFillColor(sf::Color(20, 25, 30));
+    pBackground = new sf::RectangleShape(sf::Vector2f(W, H));
+    pBackground->setFillColor(sf::Color(20, 25, 30));
 
-    //Creating deltaCLock and deltaTime
-    deltaClock = new sf::Clock();
-    deltaTime = new sf::Time();
+    //Creating deltaCLock and pDeltaTime
+    pDeltaClock = new sf::Clock();
+    pDeltaTime = new sf::Time();
 
-    //Creating and loading up font
-    font = new sf::Font();
-    font->loadFromFile("res/arial.ttf");
+    //Creating and loading up pFont
+    pFont = new sf::Font();
+    pFont->loadFromFile("res/arial.ttf");
 
-    //Creating and setting up simulationText
-    simulationText = new sf::Text();
-    simulationText->setFont(*font);
-    simulationText->setStyle(sf::Text::Bold);
-    simulationText->setPosition(10, 10);
-    simulationText->setCharacterSize(20);
-    simulationText->setFillColor(sf::Color::Green);
+    //Creating and setting up pSimulationText
+    pSimulationText = new sf::Text();
+    pSimulationText->setFont(*pFont);
+    pSimulationText->setStyle(sf::Text::Bold);
+    pSimulationText->setPosition(10, 10);
+    pSimulationText->setCharacterSize(20);
+    pSimulationText->setFillColor(sf::Color::Green);
 
-    simulationText->setString(
+    pSimulationText->setString(
             "jaqubm/gravity-simulator> Choose scene:\n\n"
             ">> TEST_SCENE\n"
             "   SCENE_0\n"
@@ -44,15 +44,15 @@ Scene::Scene()
             "   SCENE_2\n"
             );
 
-    //Creating and setting up simulationControls
-    simulationControls = new sf::Text();
-    simulationControls->setFont(*font);
-    simulationControls->setStyle(sf::Text::Bold);
-    simulationControls->setPosition(10, H - 30);
-    simulationControls->setCharacterSize(10);
-    simulationControls->setFillColor(sf::Color::White);
+    //Creating and setting up pSimulationControls
+    pSimulationControls = new sf::Text();
+    pSimulationControls->setFont(*pFont);
+    pSimulationControls->setStyle(sf::Text::Bold);
+    pSimulationControls->setPosition(10, H - 30);
+    pSimulationControls->setCharacterSize(10);
+    pSimulationControls->setFillColor(sf::Color::White);
 
-    simulationControls->setString(
+    pSimulationControls->setString(
             "Arrows (UP/DOWN) / Enter - Choose Scene\n"
             "ESC - Close gravitySimulator"
             );
@@ -63,27 +63,27 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    delete window;
-    delete settings;
-    delete background;
-    delete deltaClock;
-    delete deltaTime;
-    delete font;
-    delete simulationText;
-    delete simulationControls;
-    delete mt;
+    delete pWindow;
+    delete pSettings;
+    delete pBackground;
+    delete pDeltaClock;
+    delete pDeltaTime;
+    delete pFont;
+    delete pSimulationText;
+    delete pSimulationControls;
+    delete pMt;
 }
 
 void Scene::run()
 {
-    while (window->isOpen())
+    while (pWindow->isOpen())
     {
         eventAction();
 
-        window->clear();
+        pWindow->clear();
 
-        *deltaTime = deltaClock->restart();
-        fpsCounter = static_cast<int>(1.f / deltaTime->asSeconds());
+        *pDeltaTime = pDeltaClock->restart();
+        fpsCounter = static_cast<int>(1.f / pDeltaTime->asSeconds());
 
         switch (sceneState)
         {
@@ -110,7 +110,7 @@ void Scene::run()
             }
         }
 
-        window->display();
+        pWindow->display();
     }
 }
 
@@ -118,27 +118,27 @@ void Scene::update()
 {
     for (auto & particle : particles)
     {
-        particle.updatePhysics(gravitySources, deltaTime->asSeconds());
-        particle.updatePosition(gravitySources, deltaTime->asSeconds());
+        particle.updatePhysics(gravitySources, pDeltaTime->asSeconds());
+        particle.updatePosition(gravitySources, pDeltaTime->asSeconds());
     }
 
-    //Updating displayed fpsCounter and deltaTime
-    simulationText->setString(
+    //Updating displayed fpsCounter and pDeltaTime
+    pSimulationText->setString(
             "FPS: " + std::to_string(fpsCounter) +
-            "\ndeltaTime: " + std::to_string(deltaTime->asSeconds() * 1000) + " ms"
+            "\ndeltaTime: " + std::to_string(pDeltaTime->asSeconds() * 1000) + " ms"
     );
 }
 
 void Scene::eventAction()
 {
     sf::Event event{};
-    while (window->pollEvent(event))
+    while (pWindow->pollEvent(event))
     {
-        //Closing window
-        if (event.type == sf::Event::Closed) window->close();
+        //Closing pWindow
+        if (event.type == sf::Event::Closed) pWindow->close();
 
-        //Closing window with ESC button
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window->close();
+        //Closing pWindow with ESC button
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) pWindow->close();
 
         //Pausing Simulation
         if (sceneState == SceneState::SIM && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
@@ -157,13 +157,13 @@ void Scene::eventAction()
         //Going back to SIM_CHOOSE state from Simulation
         if ((sceneState == SceneState::SIM || sceneState == SceneState::SIM_PAUSE) && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
         {
-            window->setTitle("gravitySimulator by jaqubm");
+            pWindow->setTitle("gravitySimulator by jaqubm");
 
-            simulationText->setCharacterSize(20);
-            simulationText->setFillColor(sf::Color::Green);
+            pSimulationText->setCharacterSize(20);
+            pSimulationText->setFillColor(sf::Color::Green);
 
-            simulationControls->setPosition(10, H - 30);
-            simulationControls->setString(
+            pSimulationControls->setPosition(10, H - 30);
+            pSimulationControls->setString(
                     "Arrows (UP/DOWN) / Enter - Choose Scene\n"
                     "ESC - Close gravitySimulator"
                     );
@@ -266,50 +266,50 @@ void Scene::sceneInit() {
     {
         case SceneChooser::TEST_COLLISION:  //Particles moving between two gravitySources
         {
-            window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
+            pWindow->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
 
             gravitySources.emplace_back(W * .5f - 300, H * .5f, 144000, 70);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 144000, 70);
 
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f, randVel(*mt), 0, 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f, randVel(*pMt), 0, 5, sf::Color(randColor(*pMt), randColor(*pMt), randColor(*pMt)));
 
             break;
         }
         case SceneChooser::TEST_SCENE:  //Randomized particles
         {
-            window->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
+            pWindow->setTitle("gravitySimulator by jaqubm (TEST_SCENE)");
 
             gravitySources.emplace_back(W * .5f, H * .5f, 144000, 70);
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*mt), randPosY(*mt), randVel(*mt), randVel(*mt), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(randPosX(*pMt), randPosY(*pMt), randVel(*pMt), randVel(*pMt), 5, sf::Color(randColor(*pMt), randColor(*pMt), randColor(*pMt)));
 
             break;
         }
         case SceneChooser::SCENE_0: //Particles orbiting around gravitySource
         {
-            window->setTitle("gravitySimulator by jaqubm (SCENE_0)");
+            pWindow->setTitle("gravitySimulator by jaqubm (SCENE_0)");
 
             gravitySources.emplace_back(W * .5f, H * .5f, 36000, 90);
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 200, H * .5f + 200, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / PARTICLES_NUM) * i), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 200, H * .5f + 200, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), static_cast<float>(0.2f + (0.1 / PARTICLES_NUM) * i), 5, sf::Color(randColor(*pMt), randColor(*pMt), randColor(*pMt)));
 
             break;
         }
         case SceneChooser::SCENE_1: //Particles orbiting around gravitySources
         {
-            window->setTitle("gravitySimulator by jaqubm (SCENE_1)");
+            pWindow->setTitle("gravitySimulator by jaqubm (SCENE_1)");
 
             gravitySources.emplace_back(W * .5f - 300, H * .5f,  16000, 30);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 16000, 30);
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 300, H * .5f + 200, .3f, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f - 300, H * .5f + 200, .3f, static_cast<float>(.2f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*pMt), randColor(*pMt), randColor(*pMt)));
 
             break;
         }
         case SceneChooser::SCENE_2: //Particles creating fun shapes and interactions
         {
-            window->setTitle("gravitySimulator by jaqubm (SCENE_2)");
+            pWindow->setTitle("gravitySimulator by jaqubm (SCENE_2)");
 
             gravitySources.emplace_back(W * .5f - 300, H * .5f,  36000, 60);
             gravitySources.emplace_back(W * .5f + 300, H * .5f, 36000, 60);
-            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f + 250, .23f, static_cast<float>(.3f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*mt), randColor(*mt), randColor(*mt)));
+            for (int i=0; i < PARTICLES_NUM; i++) particles.emplace_back(W * .5f, H * .5f + 250, .23f, static_cast<float>(.3f + (.1f / static_cast<float>(PARTICLES_NUM)) * static_cast<float>(i)), 5, sf::Color(randColor(*pMt), randColor(*pMt), randColor(*pMt)));
 
             break;
         }
@@ -320,11 +320,11 @@ void Scene::sceneInit() {
         }
     }
 
-    simulationText->setCharacterSize(12);
-    simulationText->setFillColor(sf::Color::White);
+    pSimulationText->setCharacterSize(12);
+    pSimulationText->setFillColor(sf::Color::White);
 
-    simulationControls->setPosition(10, H - 40);
-    simulationControls->setString(
+    pSimulationControls->setPosition(10, H - 40);
+    pSimulationControls->setString(
             "Space - Resume/Pause simulation\n"
             "Enter - Choose Scene\n"
             "ESC - Close gravitySimulator"
@@ -337,7 +337,7 @@ void Scene::sceneChooserRender()
     {
         case SceneChooser::TEST_COLLISION:
         {
-            simulationText->setString(
+            pSimulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
                     ">> TEST_COLLISION\n"
                     "   TEST_SCENE\n"
@@ -349,7 +349,7 @@ void Scene::sceneChooserRender()
         }
         case SceneChooser::TEST_SCENE:
         {
-            simulationText->setString(
+            pSimulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
                     "   TEST_COLLISION\n"
                     ">> TEST_SCENE\n"
@@ -361,7 +361,7 @@ void Scene::sceneChooserRender()
         }
         case SceneChooser::SCENE_0:
         {
-            simulationText->setString(
+            pSimulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
                     "   TEST_COLLISION\n"
                     "   TEST_SCENE\n"
@@ -373,7 +373,7 @@ void Scene::sceneChooserRender()
         }
         case SceneChooser::SCENE_1:
         {
-            simulationText->setString(
+            pSimulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
                     "   TEST_COLLISION\n"
                     "   TEST_SCENE\n"
@@ -385,7 +385,7 @@ void Scene::sceneChooserRender()
         }
         case SceneChooser::SCENE_2:
         {
-            simulationText->setString(
+            pSimulationText->setString(
                     "jaqubm/gravity-simulator> Choose scene:\n\n"
                     "   TEST_COLLISION\n"
                     "   TEST_SCENE\n"
@@ -401,21 +401,21 @@ void Scene::sceneChooserRender()
             exit(EXIT_FAILURE);
         }
     }
-    window->draw(*simulationText);
-    window->draw(*background);
+    pWindow->draw(*pSimulationText);
+    pWindow->draw(*pBackground);
 
-    window->draw(*simulationText);
-    window->draw(*simulationControls);
+    pWindow->draw(*pSimulationText);
+    pWindow->draw(*pSimulationControls);
 }
 
 void Scene::simulationRender()
 {
-    window->draw(*background);
+    pWindow->draw(*pBackground);
 
-    for (auto & gravitySource : gravitySources) gravitySource.render(*window);
+    for (auto & gravitySource : gravitySources) gravitySource.render(*pWindow);
 
-    for (auto & particle : particles) particle.render(*window);
+    for (auto & particle : particles) particle.render(*pWindow);
 
-    window->draw(*simulationText);
-    window->draw(*simulationControls);
+    pWindow->draw(*pSimulationText);
+    pWindow->draw(*pSimulationControls);
 }

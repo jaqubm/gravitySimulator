@@ -21,21 +21,21 @@ class Scene {
 
     enum SceneChooser sceneChooser;
 
-    sf::RenderWindow * window;
-    sf::ContextSettings * settings;
+    sf::RenderWindow * pWindow;
+    sf::ContextSettings * pSettings;
 
-    sf::RectangleShape * background;
+    sf::RectangleShape * pBackground;
 
-    sf::Clock * deltaClock;
-    sf::Time *deltaTime;
+    sf::Clock * pDeltaClock;
+    sf::Time * pDeltaTime;
 
-    sf::Font * font;
-    sf::Text * simulationText;
-    sf::Text * simulationControls;
+    sf::Font * pFont;
+    sf::Text * pSimulationText;
+    sf::Text * pSimulationControls;
 
     int fpsCounter = 0;
 
-    std::mt19937 * mt;
+    std::mt19937 * pMt;
     std::random_device rd;
     std::uniform_int_distribution<int> randColor;
     std::uniform_real_distribution<float> randVel;
