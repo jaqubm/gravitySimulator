@@ -10,9 +10,29 @@ Simulating gravity for Particles and gravitySources with collisions using SFML l
 
 ## Build and Run
 
-To build and run this project you need CMake with version at least 3.0 - It will automatically download needed libraries
+Project is built using CMake with version at least 3.5
+
+### In file `config.h` you can modify:
+
+- `W` - Window Width
+- `H` - Window Height
+- `FPS` - Frame Rate Limit
+- `MAX_VEL` - Maximum velocity for random velocity generator
+- `MIN_VEL` - Minimum velocity for random velocity generator
+- `MAX_POS` - Maximum position for random position generator
+- `MIN_POS` - Minimum position for random position generator
+- `PARTICLES_NUM` - Number of Particles in simulation
+
+## Preview
+
+### Choosing Scene
+
+![Choosing Scene Preview](/preview/preview_1.png)
+
+### Simulation
+
+![Simulation Preview](/preview/preview_2.png)
 
 ## To be added
 
-- Easier Build and Run instructions
-- Preview ScreenShots
+- Multi threading to render and calculate more Particles at the same time
