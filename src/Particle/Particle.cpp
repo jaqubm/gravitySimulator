@@ -62,34 +62,7 @@ bool Particle::checkCollision(GravitySource & gravitySource, float & deltaTime)
     return false;
 }
 
-void Particle::updatePosition(std::vector<GravitySource> & gravitySources, float deltaTime)
-{
-    //Detecting collision
-    bool collision = false;
-    for (auto &gravitySource : gravitySources)
-    {
-        if (checkCollision(gravitySource, deltaTime))
-        {
-            collision = true;
-            break;
-        }
-    }
-
-    //Updating Position with pDeltaTime as milliSeconds if there was no collision
-    if (!collision)
-    {
-        pos.x += vel.x * deltaTime * 1000;
-        pos.y += vel.y * deltaTime * 1000;
-    }
-
-    //Updating Render Position
-    relPos.x = pos.x - radius;
-    relPos.y = pos.y - radius;
-
-    circleShape.setPosition(relPos);
-}
-
-void Particle::updatePhysics(std::vector<GravitySource> & gravitySources, float deltaTime)
+void Particle::update(std::vector<GravitySource> & gravitySources, float deltaTime)
 {
     for (auto &gravitySource : gravitySources)
     {
@@ -117,4 +90,28 @@ void Particle::updatePhysics(std::vector<GravitySource> & gravitySources, float 
         vel.x += accelerationX * deltaTime;
         vel.y += accelerationY * deltaTime;
     }
+
+    //Detecting collision
+    bool collision = false;
+    for (auto &gravitySource : gravitySources)
+    {
+        if (checkCollision(gravitySource, deltaTime))
+        {
+            collision = true;
+            break;
+        }
+    }
+
+    //Updating Position with pDeltaTime as milliSeconds if there was no collision
+    if (!collision)
+    {
+        pos.x += vel.x * deltaTime * 1000;
+        pos.y += vel.y * deltaTime * 1000;
+    }
+
+    //Updating Render Position
+    relPos.x = pos.x - radius;
+    relPos.y = pos.y - radius;
+
+    circleShape.setPosition(relPos);
 }

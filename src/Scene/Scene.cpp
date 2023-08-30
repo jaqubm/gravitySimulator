@@ -116,11 +116,8 @@ void Scene::run()
 
 void Scene::update()
 {
-    for (auto & particle : particles)
-    {
-        particle.updatePhysics(gravitySources, pDeltaTime->asSeconds());
-        particle.updatePosition(gravitySources, pDeltaTime->asSeconds());
-    }
+    //Updating Particles
+    for (auto & particle : particles) particle.update(gravitySources, pDeltaTime->asSeconds());
 
     //Updating displayed fpsCounter and pDeltaTime
     pSimulationText->setString(

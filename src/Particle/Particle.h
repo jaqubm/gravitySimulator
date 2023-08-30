@@ -27,7 +27,5 @@ public:
 
     bool checkCollision(GravitySource & gravitySource, float & deltaTime);
 
-    void updatePosition(std::vector<GravitySource> & gravitySources, float deltaTime);
-
-    void updatePhysics(std::vector<GravitySource> & gravitySources, float deltaTime);
+    void update(std::vector<GravitySource> & gravitySources, float deltaTime);
 };
