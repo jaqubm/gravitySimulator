@@ -11,4 +11,4 @@ constexpr int H = 810;
 #define MAX_POS 10.f
 #define MIN_POS 0.f
 
-#define PARTICLES_NUM 1000
+#define PARTICLES_NUM 5000

@@ -32,7 +32,3 @@ Project is built using CMake with version at least 3.5
 ### Simulation
 
 ![Simulation Preview](/preview/preview_2.png)
-
-## To be added
-
-- Multi threading to render and calculate more Particles at the same time
