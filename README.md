@@ -1,6 +1,6 @@
 # Gravity Simulator
 
-Gravity Simulator for Particles and GravitySources with collisions using SFML library in C++
+Gravity Simulator for Particles and GravitySources with collision system made using SFML library in C++
 
 ## Tech Stack
 
