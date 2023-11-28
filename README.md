@@ -6,7 +6,6 @@ Gravity Simulator for Particles and GravitySources with collision system made us
 
 - C++17
 - SFML
-- CMake
 
 ## Build and Run
 
